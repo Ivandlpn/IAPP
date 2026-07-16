@@ -1,0 +1,8 @@
+{
+  "name": "Remix: Remix: Seguimiento de Proyecto de Telemando",
+  "description": "Plataforma interactiva para el seguimiento de mantenimiento preventivo, incidencias, disponibilidad, penalizaciones y exportación de informes en tiempo real.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
