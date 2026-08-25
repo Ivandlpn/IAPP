@@ -24,8 +24,7 @@ DESTINO = {
     "gw":   (23, "PUERTA DE ENLACE (GATEWEY)"),
     "ipg1": (29, "SERVIDOR DE GRABACIÓN"),
     "anillo": (28, "ANILLO"),
-    "pk":   (14, "NUMERACION SOBRE PLANO"),
-}
+}   # el PK no se vuelca aquí: va en su propia columna nueva (ver EXTRA)
 # campos del PDF que no tienen columna en el formato actual
 EXTRA = [("pk", "PK ABSOLUTO"), ("g1", "GRABADOR PPAL"), ("ipg2", "IP GRABADOR SEC"),
          ("g2", "GRABADOR SEC"), ("s1r", "STR1 RESOLUCIÓN"), ("s1i", "STR1 IPS"),
