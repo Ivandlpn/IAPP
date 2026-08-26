@@ -10,7 +10,7 @@ Cierra la cadena cámara → codificador → grabador de TOVAL cruzando:
 El cruce con el listado se hace por nombre de equipo y, cuando el listado usa
 otra nomenclatura, por ubicación más sufijo de cámara.
 """
-import json, os, re, sys, unicodedata, collections
+import json, os, re, sys, unicodedata, collections, ipaddress
 import openpyxl
 from openpyxl.styles import Font, Alignment, Border, Side, PatternFill
 
@@ -46,6 +46,18 @@ def main():
         por_nombre.setdefault(K(a["cam"]), a)
         por_sitio.setdefault((N(a["desc"]), a["cam"].split("_")[-1]), a)
 
+    # tercera clave: cada VIP-X1600 lleva cuatro tarjetas y ocupa cuatro IPs
+    # consecutivas, así que la IP de la cámara dice de qué codificador cuelga
+    por_ip = {}
+    for c, v in ips.items():
+        try:
+            b = ipaddress.ip_address(v["ip"])
+        except ValueError:
+            continue
+        for k in range(4):
+            por_ip.setdefault(str(b + k), (c, k))
+    ENTRADAS = {0: "1 o 3", 1: "5 o 7", 2: "9 o 11", 3: "13 o 15"}
+
     ws31 = openpyxl.load_workbook(v31, data_only=True).active
     filas = []
     for r in range(INICIO, FIN + 1):
@@ -55,7 +67,15 @@ def main():
         via = "nombre" if a else None
         if not a:
             a = por_sitio.get((N(ubic), ref.split("_")[-1]))
-            via = "ubicación + sufijo" if a else "no encontrada"
+            via = "ubicación + sufijo" if a else None
+        entradas = None
+        if not a:
+            porip = por_ip.get(str(ws31.cell(r, 21).value))
+            if porip:
+                a = {"codec": porip[0], "ent": None, "cam": None, "desc": None}
+                via, entradas = "IP del codificador", ENTRADAS[porip[1]]
+            else:
+                via = "no encontrada"
         codec = a["codec"] if a else None
         grab = cod2gr.get(codec) if codec else None
         res = cod2res.get(codec) if codec else None
@@ -69,9 +89,10 @@ def main():
             grab,                                          # AC SERVIDOR DE GRABACIÓN
             " / ".join(res) if res else None,
             (ips.get(codec) or {}).get("ip"),
-            a["cam"] if a and a["cam"] != ref else None,
+            a["cam"] if a and a.get("cam") and a["cam"] != ref else None,
             a["desc"] if a else None,
             via,
+            entradas,
             "revisar: el codec figura bajo varios grabadores" if codec in ambiguos else None,
         ])
 
@@ -109,8 +130,9 @@ def main():
            f"G → S{INICIO}\nFUNCIÓN CÁMARA", f"H → AC{INICIO}\nSERVIDOR DE GRABACIÓN",
            "solo consulta\nGrabador fail-over", "solo consulta\nIP del codificador",
            "solo consulta\nNombre en el proyecto", "solo consulta\nEmplazamiento",
-           "solo consulta\nCruzado por", "solo consulta\nAviso"]
-    anchos = [9, 24, 14, 24, 10, 24, 16, 24, 24, 16, 24, 30, 16, 34]
+           "solo consulta\nCruzado por", "solo consulta\nEntrada posible",
+           "solo consulta\nAviso"]
+    anchos = [9, 24, 14, 24, 10, 24, 16, 24, 24, 16, 24, 30, 18, 14, 34]
     for j, h in enumerate(cab, 1):
         c = ws.cell(1, j, h)
         c.font = Font(bold=True)
@@ -131,7 +153,7 @@ def main():
     print(f"{len(filas)} filas | codificador: {sum(1 for f in filas if f[3])} | "
           f"grabador: {sum(1 for f in filas if f[7])} | "
           f"fail-over: {sum(1 for f in filas if f[8])} | "
-          f"avisos: {sum(1 for f in filas if f[13])}")
+          f"avisos: {sum(1 for f in filas if f[14])}")
 
 
 if __name__ == "__main__":
