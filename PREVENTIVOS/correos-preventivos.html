@@ -45,9 +45,11 @@ h1,h2,h3{margin:0; font-weight:650; letter-spacing:-.01em}
 .num{font-variant-numeric:tabular-nums}
 
 /* ---------- Cabecera ---------- */
+/* Todas las bandas son de ancho completo, pero su contenido ocupa el 85 %
+   centrado: 7,5 % de margen a cada lado. */
 .appbar{
   background:linear-gradient(105deg,var(--navy) 0%,var(--navy-700) 100%);
-  color:#fff; padding:16px 28px; display:flex; align-items:center; gap:16px; flex-wrap:wrap;
+  color:#fff; padding:16px 7.5%; display:flex; align-items:center; gap:16px; flex-wrap:wrap;
 }
 .appbar .mark{
   width:40px; height:40px; border-radius:11px; display:grid; place-items:center;
@@ -61,12 +63,11 @@ h1,h2,h3{margin:0; font-weight:650; letter-spacing:-.01em}
   background:#fff; border-radius:9px; padding:8px 14px;
 }
 .appbar .org img{height:22px; width:auto; display:block}
-.appbar .org #logoAdif{height:20px}
 
 /* ---------- Barra de control ---------- */
 .toolbar{
   background:var(--panel); border-bottom:1px solid var(--line);
-  padding:12px 28px; display:flex; align-items:flex-end; gap:16px; flex-wrap:wrap;
+  padding:12px 7.5%; display:flex; align-items:flex-end; gap:16px; flex-wrap:wrap;
   position:sticky; top:0; z-index:40; box-shadow:var(--sh-1);
 }
 .field{display:flex; flex-direction:column; gap:4px}
@@ -116,7 +117,7 @@ h1,h2,h3{margin:0; font-weight:650; letter-spacing:-.01em}
 /* ---------- Pestañas ---------- */
 .tabs{
   background:var(--panel); border-bottom:1px solid var(--line);
-  padding:0 28px 10px; display:flex; gap:4px; overflow-x:auto;
+  padding:0 7.5% 10px; display:flex; gap:4px; overflow-x:auto;
 }
 .tab{
   border:1px solid transparent; background:none; cursor:pointer; white-space:nowrap;
@@ -127,7 +128,7 @@ h1,h2,h3{margin:0; font-weight:650; letter-spacing:-.01em}
 .tab[aria-selected="true"]{background:var(--navy); color:#fff}
 
 /* ---------- Estructura ---------- */
-.wrap{max-width:1220px; margin:0 auto; padding:26px 28px 60px}
+.wrap{width:100%; padding:26px 7.5% 60px}
 .view[hidden]{display:none}
 .seccion{
   display:flex; align-items:baseline; gap:12px; margin:0 0 14px;
@@ -146,12 +147,23 @@ h1,h2,h3{margin:0; font-weight:650; letter-spacing:-.01em}
 }
 .card:hover{box-shadow:var(--sh-2); border-color:var(--line-2); transform:translateY(-1px)}
 .card .marca{
-  height:74px; display:grid; place-items:center; padding:12px 18px;
-  background:linear-gradient(180deg, color-mix(in srgb, var(--marca) 7%, #fff), #fff);
-  border-bottom:1px solid var(--line);
+  height:82px; display:grid; place-items:center; padding:14px 18px;
+  /* Fondo blanco: los logotipos del libro traen su propio fondo blanco y
+     cualquier tinte deja a la vista su recuadro. */
+  background:#fff; border-bottom:1px solid var(--line);
 }
-.card .marca img{max-height:44px; max-width:100%}
-.card .marca .rotulo{font-size:17px; font-weight:750; color:var(--marca); letter-spacing:.03em}
+/* Misma caja para todos los logotipos: los originales traen proporciones muy
+   distintas, así que se encajan sin deformarlos. */
+.card .marca img,
+.card .marca .rotulo{
+  width:100%; max-width:190px; height:48px;
+  display:flex; align-items:center; justify-content:center;
+}
+.card .marca img{object-fit:contain}
+.card .marca .rotulo{
+  font-size:16px; font-weight:750; color:var(--marca); letter-spacing:.03em;
+  text-align:center; line-height:1.2;
+}
 .card .cuerpo{padding:16px 18px; display:flex; flex-direction:column; gap:12px; flex:1}
 .card h3{font-size:16.5px; color:var(--marca)}
 .card .sub{font-size:12.5px; color:var(--muted); margin:-8px 0 0}
@@ -356,8 +368,11 @@ table.sheet tr.grupo-total td.subsis,table.sheet tr.grupo-total td.act{backgroun
   font-size:13.5px; font-weight:600; box-shadow:0 10px 30px rgba(6,18,42,.32); z-index:200;
 }
 .pie-pagina{
-  max-width:1220px; margin:0 auto; padding:0 28px 34px;
+  padding:0 7.5% 34px;
   font-size:11.5px; color:#8291a8; display:flex; gap:8px; flex-wrap:wrap;
+}
+@media (max-width:900px){
+  .appbar,.toolbar,.tabs,.wrap,.pie-pagina{padding-left:3.5%; padding-right:3.5%}
 }
 @media (max-width:640px){
   .appbar,.toolbar,.tabs,.wrap,.pie-pagina{padding-left:16px; padding-right:16px}
@@ -476,7 +491,7 @@ const URL_INECO_TAIL = "&FolderCTID=0x01200062DBE0A1ADC29842A4AE8821D57D8C85";
 
 const CONTRATOS = [
 {
-  id:"MAVENTS", hoja:"MAVENTS", color:"#184878", rotulo:"UTE MAVENTS", logo:LOGOS.mavents, orden:4,
+  id:"MAVENTS", hoja:"MAVENTS", color:"#184878", rotulo:"UTE MAVENTS", logo:LOGOS.mavents, orden:1,
   expediente:"2.14/20506.0042", eje:"EJE ESTE DE ALTA VELOCIDAD", mantenedor:"UTE MAVENTS",
   contrato:"CONTRATO MANTENIMIENTO Y RENOVACIÓN TELECOMUNICACIONES Y TELEMANDO DE ENERGIA LINEAS DE ALTA VELOCIDAD MADRID-SEVILLA-MALAGA, MADRID-VALLADOLID, MADRID-BARCELONA-FRONTERA FRANCESA Y MADRID-VALENCIA/ALBACETE",
   bloque:"MEDICION ANUAL PROGRAMADA / REALIZADA EN MANTENIMIENTO PREVENTIVO",
@@ -561,7 +576,7 @@ const CONTRATOS = [
   ]
 },
 {
-  id:"CHATO", hoja:"CHATO", color:"#002060", rotulo:"UTE MTO. CHATO", logo:null, orden:1,
+  id:"CHATO", hoja:"CHATO", color:"#002060", rotulo:"UTE MTO. CHATO", logo:null, orden:4,
   expediente:"2.23/21506.0018", eje:"EJE ESTE DE ALTA VELOCIDAD", mantenedor:"UTE MTO. CHATO",
   contrato:"SERVICIOS DE MANTENIMIENTO DE LAS INSTALACIONES DE SEÑALIZACIÓN, SISTEMAS DE PROTECCIÓN DEL TREN, TELECOMUNICACIONES FIJAS, Y SISTEMAS DE PROTECCIÓN Y SEGURIDAD DE LA LÍNEA DE ALTA VELOCIDAD MADRID-LEVANTE. TRAMO MADRID CHAMARTÍN – TORREJÓN DE VELASCO",
   bloque:"MEDICION MENSUAL PROGRAMADA / REALIZADA EN MANTENIMIENTO PREVENTIVO",
