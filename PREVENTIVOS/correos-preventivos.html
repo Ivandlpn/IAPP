@@ -664,9 +664,13 @@ const SOAV = {
 const LS_KEY = "preventivos.correos.v1";
 const vacia = () => Array(12).fill(null);
 
+// De partida se propone el mes anterior al actual, que es el que se certifica:
+// los preventivos de un mes se piden cuando ese mes ya ha terminado.
+const INICIO = mesAnterior();
+
 const estado = {
-  mes: new Date().getMonth(),          // 0-11 (equivale a la celda B4)
-  ano: new Date().getFullYear(),       // (equivale a la celda C4)
+  mes: INICIO.mes,                     // 0-11 (equivale a la celda B4)
+  ano: INICIO.ano,                     // (equivale a la celda C4)
   hoja: "CORREOS",
   soavMes: null,                       // índice absoluto mes*12; null = mes anterior automático
   verVacias: false,
