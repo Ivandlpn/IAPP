@@ -149,16 +149,59 @@ h1,h2,h3{margin:0; font-weight:650; letter-spacing:-.01em}
 .btn-plain{background:transparent; color:var(--muted); padding:6px 10px; font-size:12.5px}
 .btn-plain:hover{color:var(--navy); background:var(--blue-050)}
 .btn-mail{
-  background:var(--blue); color:#fff; box-shadow:0 1px 2px rgba(0,112,192,.35);
-  padding:10px 16px; font-size:14px; width:100%;
+  position:relative; overflow:hidden; isolation:isolate;
+  width:100%; padding:11px 14px; font-size:14px; letter-spacing:.01em; color:#fff;
+  background:linear-gradient(135deg,#128be0 0%,#0070C0 48%,#00538f 100%);
+  box-shadow:0 1px 2px rgba(0,50,105,.3), 0 5px 14px rgba(0,112,192,.24);
+  transition:transform .16s cubic-bezier(.2,.7,.3,1), box-shadow .16s, filter .16s;
 }
-.btn-mail:hover{background:var(--blue-600)}
+/* Reflejo que barre el botón al pasar por encima */
+.btn-mail::before{
+  content:""; position:absolute; inset:-1px; z-index:-1; pointer-events:none;
+  background:linear-gradient(100deg,transparent 28%,rgba(255,255,255,.30) 50%,transparent 72%);
+  transform:translateX(-115%);
+  transition:transform .6s cubic-bezier(.3,.6,.3,1);
+}
+.btn-mail:hover{
+  filter:saturate(1.06);
+  transform:translateY(-1.5px);
+  box-shadow:0 2px 4px rgba(0,50,105,.28), 0 12px 26px rgba(0,112,192,.34);
+}
+.btn-mail:hover::before{transform:translateX(115%)}
+.btn-mail:active{
+  transform:translateY(0);
+  box-shadow:0 1px 2px rgba(0,50,105,.34), inset 0 2px 6px rgba(0,30,70,.28);
+}
+.btn-mail:focus-visible{
+  outline:none;
+  box-shadow:0 0 0 2.5px #fff, 0 0 0 5.5px rgba(0,112,192,.55), 0 8px 20px rgba(0,112,192,.3);
+}
 .btn-mail .env{
-  width:22px; height:22px; border-radius:6px; background:rgba(255,255,255,.18);
-  display:grid; place-items:center; font-size:12px; flex:0 0 auto;
+  width:26px; height:26px; border-radius:8px; flex:0 0 auto;
+  background:rgba(255,255,255,.17); border:1px solid rgba(255,255,255,.28);
+  display:grid; place-items:center;
+  transition:background .16s, transform .16s;
 }
-.btn-mail.alt{background:#0f7b4f; box-shadow:0 1px 2px rgba(15,123,79,.35)}
-.btn-mail.alt:hover{background:#0c6741}
+.btn-mail:hover .env{background:rgba(255,255,255,.26); transform:scale(1.05)}
+.btn-mail .txt{flex:0 1 auto; overflow:hidden; text-overflow:ellipsis}
+.btn-mail .flecha{
+  margin-left:auto; display:grid; place-items:center; opacity:.7; flex:0 0 auto;
+  transition:transform .18s cubic-bezier(.2,.7,.3,1), opacity .18s;
+}
+.btn-mail:hover .flecha{transform:translateX(3px); opacity:1}
+.btn-mail.alt{
+  background:linear-gradient(135deg,#149a63 0%,#0f7b4f 48%,#0a5c3b 100%);
+  box-shadow:0 1px 2px rgba(6,70,45,.3), 0 5px 14px rgba(15,123,79,.24);
+}
+.btn-mail.alt:hover{box-shadow:0 2px 4px rgba(6,70,45,.28), 0 12px 26px rgba(15,123,79,.34)}
+.btn-mail.alt:focus-visible{
+  box-shadow:0 0 0 2.5px #fff, 0 0 0 5.5px rgba(15,123,79,.55), 0 8px 20px rgba(15,123,79,.3);
+}
+@media (prefers-reduced-motion: reduce){
+  .btn-mail,.btn-mail::before,.btn-mail .env,.btn-mail .flecha{transition:none}
+  .btn-mail:hover{transform:none}
+  .btn-mail:hover::before{transform:translateX(-115%)}
+}
 
 /* ---------- Pestañas ---------- */
 .tabs{
@@ -237,8 +280,9 @@ h1,h2,h3{margin:0; font-weight:650; letter-spacing:-.01em}
 .cifra.hecho .et{color:var(--ok)}
 .card dl{margin-bottom:auto}
 .card dd{word-break:break-word}
-.card .pie{display:flex; gap:8px; padding:0 18px 16px}
-.card .pie .btn-mail{flex:1 1 auto; min-width:0; padding:10px 12px}
+.card .pie{display:flex; flex-direction:column; gap:3px; padding:0 18px 14px}
+.card .pie .btn-mail{width:100%}
+.card .pie .ver-hoja{width:100%; font-size:12.5px; font-weight:650; padding:7px}
 
 /* ---------- Acciones amplias ---------- */
 .panel{
@@ -491,7 +535,22 @@ table.sheet tr.grupo-total td.subsis,table.sheet tr.grupo-total td.act{backgroun
         <label for="soavMes">Mes del aviso</label>
         <select id="soavMes" class="control" style="min-width:270px"></select>
       </div>
-      <button class="btn btn-mail alt" id="btnSOAV"><span class="env">✉</span> Preparar correo a SOAV</button>
+      <button class="btn btn-mail alt" id="btnSOAV" type="button">
+        <span class="env">
+          <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true">
+            <rect x="2.3" y="5" width="19.4" height="14" rx="2.4" fill="none" stroke="currentColor" stroke-width="1.9"/>
+            <path d="M3.5 6.7 12 13l8.5-6.3" fill="none" stroke="currentColor" stroke-width="1.9"
+                  stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+        <span class="txt">Preparar correo a SOAV</span>
+        <span class="flecha">
+          <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
+            <path d="M5 12h12.5m-5-5.5L18 12l-5.5 5.5" fill="none" stroke="currentColor"
+                  stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+      </button>
     </div>
 
   </section>
@@ -1000,6 +1059,24 @@ function el(tag, props, ...hijos){
   return n;
 }
 
+const SVG_SOBRE =
+  '<svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true">' +
+  '<rect x="2.3" y="5" width="19.4" height="14" rx="2.4" fill="none" stroke="currentColor" stroke-width="1.9"/>' +
+  '<path d="M3.5 6.7 12 13l8.5-6.3" fill="none" stroke="currentColor" stroke-width="1.9" ' +
+  'stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const SVG_FLECHA =
+  '<svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">' +
+  '<path d="M5 12h12.5m-5-5.5L18 12l-5.5 5.5" fill="none" stroke="currentColor" ' +
+  'stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+/** Botón de preparar correo: sobre, texto y flecha. */
+function botonCorreo(texto, alPulsar, extra){
+  return el("button", Object.assign({class:"btn btn-mail", type:"button", onclick:alPulsar}, extra || {}),
+    el("span", {class:"env", html:SVG_SOBRE}),
+    el("span", {class:"txt"}, texto),
+    el("span", {class:"flecha", html:SVG_FLECHA}));
+}
+
 let temporizadorAviso = null;
 function aviso(txt){
   let t = $(".toast");
@@ -1060,11 +1137,12 @@ function pintarTarjetas(){
           el("span", {class:"et"}, "Realizado"),
           el("span", {class:"va num"}, cifra(realizado)))),
       el("div", {class:"pie"},
-        el("button", {class:"btn btn-mail",
-          onclick:() => abrirCola([correoContrato(c.id, estado.mes, estado.ano)])},
-          el("span", {class:"env"}, "✉"), "Preparar correo"),
-        el("button", {class:"btn btn-sec", title:"Abrir la hoja " + c.hoja,
-          onclick:() => { estado.hoja = c.id; pintarTabs(); mostrarVista(); }}, "Hoja"))
+        botonCorreo("Preparar correo",
+          () => abrirCola([correoContrato(c.id, estado.mes, estado.ano)])),
+        el("button", {class:"btn btn-plain ver-hoja", type:"button",
+          title:"Abrir la hoja " + c.hoja,
+          onclick:() => { estado.hoja = c.id; pintarTabs(); mostrarVista(); }},
+          "Ver la hoja " + c.hoja))
     ));
   }
 }
@@ -1124,9 +1202,9 @@ function pintarHoja(id){
     el("span", {class:"espacio"}),
     el("button", {class:"btn btn-sec", onclick:() => { copiarRealizadasDesdeCorreo(id); }},
       "Realizadas = Programadas"),
-    el("button", {class:"btn btn-mail", style:"width:auto",
-      onclick:() => abrirCola([correoContrato(id, estado.mes, estado.ano)])},
-      el("span", {class:"env"}, "✉"), "Preparar correo")
+    botonCorreo("Preparar correo",
+      () => abrirCola([correoContrato(id, estado.mes, estado.ano)]),
+      {style:"width:auto"})
   ));
 
   const obs = el("textarea", {placeholder:"Observaciones de la certificación…"});
