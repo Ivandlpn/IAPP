@@ -54,8 +54,16 @@ Las imágenes de la firma no viajan como `data:` —Outlook no las pinta— sino
 partes MIME propias: el `.eml` es un `multipart/related` y cada imagen lleva su
 `Content-ID`, referenciada desde el HTML con `cid:`.
 
-Conviene desactivar la firma automática de Outlook para mensajes nuevos
-(*Archivo → Opciones → Correo → Firmas*) para que no salga duplicada.
+**Hay que desactivar la firma automática de Outlook**, o saldrán dos. Outlook inserta
+la suya al abrir el borrador y la coloca al principio, antes del saludo; desde el `.eml`
+no hay forma de impedirlo. En *Datos → Mi firma* está el botón «Cómo se hace» con los
+pasos para Outlook de escritorio y para el nuevo Outlook / web.
+
+Ahí mismo se elige quién firma:
+
+- **Firma la aplicación** (de serie) — la firma va al final del `.eml`, siempre en el
+  mismo sitio. Requiere desactivar la de Outlook.
+- **Firma Outlook** — el `.eml` sale sin firma y la pone Outlook, donde él decida.
 
 ### Destinatarios
 

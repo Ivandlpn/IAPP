@@ -337,6 +337,28 @@ table.sheet tr.grupo-total td.subsis,table.sheet tr.grupo-total td.act{backgroun
   margin-top:16px; padding-top:11px; border-top:1px dashed var(--line-2);
   font-size:12px; color:var(--muted); line-height:1.6;
 }
+.aviso-firma{
+  background:#fff8e6; border:1px solid #f0d89a; border-radius:var(--r-sm);
+  padding:9px 13px; font-size:12.5px; color:#6a5316; margin:0 0 14px;
+  display:flex; align-items:center; gap:6px; flex-wrap:wrap;
+}
+.aviso-firma b{color:#4c3a08}
+.aviso-firma .btn-plain{color:#7a5c10; text-decoration:underline; padding:2px 6px}
+.eleccion{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:10px; margin-bottom:14px}
+.opcion{
+  cursor:pointer; text-align:left; border:1px solid var(--line-2); background:#fff;
+  border-radius:var(--r-sm); padding:12px 14px; display:flex; flex-direction:column; gap:4px;
+}
+.opcion:hover{border-color:var(--blue); background:var(--blue-050)}
+.opcion b{font-size:14px; color:var(--navy)}
+.opcion span{font-size:12px; color:var(--muted); line-height:1.45}
+.opcion.activa{border-color:var(--blue); background:var(--blue-050); box-shadow:0 0 0 2px rgba(0,112,192,.18)}
+.opcion.activa b::before{content:"✓ "; color:var(--blue)}
+.bloque-firma p{margin:0 0 10px}
+.paso-tit{font-size:12.5px; color:var(--navy); margin:16px 0 6px; text-transform:uppercase; letter-spacing:.07em}
+.pasos{margin:0; padding-left:20px; font-size:13px; color:#2a3b57; line-height:1.7}
+.pasos li{padding-left:2px}
+.pasos li::marker{color:var(--blue); font-weight:700}
 .lista-dir{
   width:100%; min-height:190px; border:1px solid var(--line-2); border-radius:var(--r-sm);
   padding:12px 14px; font-family:"Cascadia Mono",Consolas,monospace; font-size:12.5px;
@@ -1649,14 +1671,14 @@ function pintarModal(){
   if(firma){
     cuerpoHtml.appendChild(el("div", {class:"sigfirma", html: firma}));
     cuerpoHtml.appendChild(el("div", {class:"sigslot"},
-      "La firma va incluida en el .eml, al final y con el logotipo como imagen " +
-      "incrustada. Desactiva la firma automática de Outlook para mensajes nuevos " +
-      "(Archivo → Opciones → Correo → Firmas) y no saldrá duplicada. ",
+      "Ésta es la única firma del correo: va al final del .eml, con el logotipo " +
+      "incrustado como imagen. ",
       el("button", {class:"btn btn-plain", onclick:editarFirma}, "Editar firma")));
   }else{
     cuerpoHtml.appendChild(el("div", {class:"sigslot"},
-      "Sin firma: la pondrá Outlook, si la tiene configurada. ",
-      el("button", {class:"btn btn-plain", onclick:editarFirma}, "Poner mi firma")));
+      "El correo sale sin firma: la pondrá Outlook con su firma automática, " +
+      "donde él decida colocarla. ",
+      el("button", {class:"btn btn-plain", onclick:editarFirma}, "Que firme la aplicación")));
   }
 
   const back = el("div", {class:"modal-back", onclick:(e) => { if(e.target === back) cerrarModal(); }},
@@ -1667,6 +1689,10 @@ function pintarModal(){
           el("span", {class:"pill"}, (colaIdx+1) + " de " + cola.length)) : null,
         el("button", {class:"close", title:"Cerrar", onclick:cerrarModal}, "×")),
       el("div", {class:"body"},
+        firma ? el("div", {class:"aviso-firma"},
+          el("b", null, "Para que no salgan dos firmas: "),
+          "desactiva la automática de Outlook para mensajes nuevos. ",
+          el("button", {class:"btn btn-plain", onclick:comoQuitarFirmaOutlook}, "Cómo se hace")) : null,
         el("div", {class:"hdrs"},
           el("div", {class:"k"}, "Para"),   el("div", {class:"v"}, correo.para.join("; ")),
           el("div", {class:"k"}, "CC"),     el("div", {class:"v"}, correo.copia.join("; ")),
@@ -1704,6 +1730,42 @@ function abrirWebs(){
   window.open(url1, "_blank", "noopener");
   window.open(URL_ADIF_ESTE, "_blank", "noopener");
   aviso("Abriendo carpeta " + mm + " " + mmm + yy + " (INECO) y carpeta ADIF");
+}
+
+/** Pasos para desactivar la firma automática de Outlook, que es lo que
+ *  provoca la segunda firma: Outlook la inserta al principio del mensaje y
+ *  el .eml no puede impedirlo. */
+function comoQuitarFirmaOutlook(){
+  const paso = t => el("li", null, t);
+  const back = el("div", {class:"modal-back", onclick:(e) => { if(e.target === back) back.remove(); }},
+    el("div", {class:"modal", style:"width:min(640px,100%)"},
+      el("header", null, el("h2", null, "Quitar la firma automática de Outlook"),
+        el("button", {class:"close", onclick:() => back.remove()}, "×")),
+      el("div", {class:"body"},
+        el("p", null,
+          "Outlook añade su firma de mensajes nuevos al abrir el borrador y la coloca " +
+          "al principio, antes del saludo. Desde el archivo .eml no hay forma de " +
+          "impedirlo, así que se desactiva una vez en Outlook y ya sólo queda la que " +
+          "pone esta aplicación, al final."),
+        el("h3", {class:"paso-tit"}, "Outlook de escritorio"),
+        el("ol", {class:"pasos"},
+          paso("Archivo → Opciones → Correo."),
+          paso("Botón «Firmas…»."),
+          paso("En «Elegir firma predeterminada», selecciona tu cuenta."),
+          paso("En «Mensajes nuevos» elige (ninguna). Deja la de «Respuestas o reenvíos» como esté."),
+          paso("Aceptar.")),
+        el("h3", {class:"paso-tit"}, "Outlook nuevo y Outlook web"),
+        el("ol", {class:"pasos"},
+          paso("Configuración (rueda dentada) → Correo → Redactar y responder."),
+          paso("En «Firmas», desmarca «Agregar automáticamente mi firma a los mensajes nuevos que redacto»."),
+          paso("Guardar.")),
+        el("p", {style:"margin-top:14px"},
+          "Si prefieres seguir firmando con Outlook, en Datos → Mi firma puedes dejar " +
+          "que firme él y la aplicación no añadirá ninguna.")),
+      el("footer", null,
+        el("button", {class:"btn btn-pri", onclick:() => back.remove()}, "Entendido"))
+    ));
+  document.body.appendChild(back);
 }
 
 /** Editor de destinatarios de un correo. Una dirección por línea, en el
@@ -1763,25 +1825,54 @@ function editarFirma(){
     role:"textbox", "aria-label":"Firma"});
   zona.innerHTML = firmaActual();
 
+  const editor = el("div", {class:"bloque-firma"},
+    el("p", null,
+      "Se añade al final de cada .eml. Para sustituirla, abre un mensaje nuevo en " +
+      "Outlook, selecciona tu firma, cópiala (Ctrl+C) y pégala aquí (Ctrl+V): las " +
+      "imágenes viajarán incrustadas en el correo."),
+    zona);
+
+  const opciones = el("div", {class:"eleccion"});
+  const pintarEleccion = () => {
+    const firmaApp = estado.firma !== "";
+    opciones.innerHTML = "";
+    opciones.appendChild(el("button", {
+      class:"opcion" + (firmaApp ? " activa" : ""),
+      onclick:() => {
+        if(!zona.innerHTML.trim()) zona.innerHTML = FIRMA_POR_DEFECTO;
+        estado.firma = zona.innerHTML.trim();
+        guardar(); pintarEleccion();
+      }},
+      el("b", null, "Firma la aplicación"),
+      el("span", null, "Va al final del correo, siempre en el mismo sitio. Hay que desactivar la automática de Outlook.")));
+    opciones.appendChild(el("button", {
+      class:"opcion" + (firmaApp ? "" : " activa"),
+      onclick:() => { estado.firma = ""; guardar(); pintarEleccion(); }},
+      el("b", null, "Firma Outlook"),
+      el("span", null, "El .eml sale sin firma y la pone Outlook, donde él decida colocarla.")));
+    editor.hidden = !firmaApp;
+  };
+  pintarEleccion();
+
   const back = el("div", {class:"modal-back", onclick:(e) => { if(e.target === back) back.remove(); }},
     el("div", {class:"modal", style:"width:min(700px,100%)"},
       el("header", null, el("h2", null, "Mi firma"),
         el("button", {class:"close", onclick:() => back.remove()}, "×")),
       el("div", {class:"body"},
-        el("p", null,
-          "Esta es la firma que se añade al final de cada .eml. Para sustituirla, abre " +
-          "un mensaje nuevo en Outlook, selecciona tu firma, cópiala (Ctrl+C) y pégala " +
-          "aquí (Ctrl+V); las imágenes viajarán incrustadas en el correo. Con «Vaciar» " +
-          "se envía sin firma y la pone Outlook."),
-        zona),
+        el("p", null, "Un correo sólo debe llevar una firma. Elige quién la pone:"),
+        opciones,
+        el("div", {class:"aviso-firma"},
+          el("b", null, "Con «Firma la aplicación» hay que quitar la de Outlook. "),
+          el("button", {class:"btn btn-plain", onclick:comoQuitarFirmaOutlook}, "Cómo se hace")),
+        editor),
       el("footer", null,
         el("button", {class:"btn btn-pri", onclick:() => {
-          estado.firma = zona.innerHTML.trim(); guardar(); back.remove();
+          if(estado.firma !== "") estado.firma = zona.innerHTML.trim();
+          guardar(); back.remove();
           if(cola.length) pintarModal();
-          aviso(estado.firma ? "Firma guardada" : "Firma vacía: se ha quitado");
-        }}, "Guardar firma"),
-        el("button", {class:"btn btn-sec", onclick:() => { zona.innerHTML = ""; zona.focus(); }},
-          "Vaciar"),
+          aviso(estado.firma === "" ? "El correo saldrá sin firma: la pondrá Outlook"
+                                    : "Firma guardada");
+        }}, "Guardar"),
         el("button", {class:"btn btn-sec", onclick:() => {
           zona.innerHTML = FIRMA_POR_DEFECTO; zona.focus();
         }}, "Recuperar la de serie"),
