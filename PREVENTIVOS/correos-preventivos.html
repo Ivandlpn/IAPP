@@ -7,315 +7,430 @@
 <style>
 /* ============================================================================
    Réplica de Solicitud_Preventivos__Correos_Mensuales_2026.xlsm
-   Paleta tomada del libro Excel y de los correos generados por las macros:
-     #002060  azul corporativo (título / texto de los correos)
-     #0070C0  azul cabeceras de tabla
-     #B4C6E7  azul suave fila TOTAL
+   Paleta corporativa tomada del libro y de los correos que generaban las macros:
+     #002060  azul institucional   #0070C0  azul de cabeceras
+     #B4C6E7  azul suave (totales)
    ========================================================================== */
 :root{
-  --ink:#002060;
-  --accent:#0070C0;
-  --accent-dark:#005596;
+  --navy:#002060;
+  --navy-700:#0a2f7a;
+  --blue:#0070C0;
+  --blue-600:#0063aa;
+  --blue-050:#eaf3fb;
   --soft:#B4C6E7;
-  --bg:#eef1f6;
+  --ink:#101d33;
+  --muted:#5c6c85;
+  --line:#dfe5ef;
+  --line-2:#c8d3e4;
+  --bg:#f3f5f9;
   --panel:#ffffff;
-  --line:#c9d3e4;
-  --line-soft:#e3e9f3;
-  --muted:#5a6b86;
-  --ok:#00B050;
-  --warn:#c0504d;
-  --radius:10px;
-  --shadow:0 1px 2px rgba(0,32,96,.08), 0 8px 24px rgba(0,32,96,.07);
+  --ok:#0f7b4f;
+  --ok-bg:#e9f6ef;
+  --warn:#b4451f;
+  --r-sm:8px; --r-md:12px; --r-lg:16px;
+  --sh-1:0 1px 2px rgba(16,29,51,.06);
+  --sh-2:0 2px 6px rgba(16,29,51,.06), 0 12px 28px rgba(16,29,51,.07);
+  --sh-3:0 24px 64px rgba(6,18,42,.28);
 }
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
 body{
-  font-family:Calibri,"Segoe UI",Carlito,system-ui,-apple-system,sans-serif;
-  background:var(--bg); color:#1b2a44; font-size:15px; line-height:1.45;
+  background:var(--bg); color:var(--ink);
+  font-family:"Segoe UI",Calibri,Carlito,system-ui,-apple-system,"Helvetica Neue",sans-serif;
+  font-size:14px; line-height:1.5; -webkit-font-smoothing:antialiased;
 }
-button,input,select,textarea{font:inherit;color:inherit}
-a{color:var(--accent-dark)}
+button,input,select,textarea{font:inherit; color:inherit}
+a{color:var(--blue-600)}
+h1,h2,h3{margin:0; font-weight:650; letter-spacing:-.01em}
+.num{font-variant-numeric:tabular-nums}
 
-/* ---------- Barra de título (celda A1:P2 del libro) ---------- */
-.titlebar{
-  background:var(--ink); color:#fff; padding:14px 22px;
-  display:flex; align-items:center; gap:16px; flex-wrap:wrap;
+/* ---------- Cabecera ---------- */
+.appbar{
+  background:linear-gradient(105deg,var(--navy) 0%,var(--navy-700) 100%);
+  color:#fff; padding:16px 28px; display:flex; align-items:center; gap:16px; flex-wrap:wrap;
 }
-.titlebar h1{
-  margin:0; font-size:23px; font-weight:700; letter-spacing:.3px; flex:1 1 auto;
+.appbar .mark{
+  width:40px; height:40px; border-radius:11px; display:grid; place-items:center;
+  background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.22);
+  font-size:19px; flex:0 0 auto;
 }
-.titlebar .sub{font-size:12.5px; opacity:.72; letter-spacing:.4px; text-transform:uppercase}
+.appbar h1{font-size:19px; line-height:1.2}
+.appbar .claim{margin:2px 0 0; font-size:12.5px; color:#b9c8e6; letter-spacing:.02em}
+.appbar .org{
+  margin-left:auto; font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+  color:#93a9d3; border-left:1px solid rgba(255,255,255,.18); padding-left:16px;
+}
 
-/* ---------- Barra de control (fila 3-4: mes / año) ---------- */
-.controlbar{
+/* ---------- Barra de control ---------- */
+.toolbar{
   background:var(--panel); border-bottom:1px solid var(--line);
-  padding:12px 22px; display:flex; align-items:flex-end; gap:18px; flex-wrap:wrap;
-  position:sticky; top:0; z-index:40;
+  padding:12px 28px; display:flex; align-items:flex-end; gap:16px; flex-wrap:wrap;
+  position:sticky; top:0; z-index:40; box-shadow:var(--sh-1);
 }
-.field{display:flex; flex-direction:column; gap:3px}
-.field label{font-size:11.5px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.5px}
-.field select,.field input{
-  border:1px solid var(--line); border-radius:6px; padding:7px 10px; background:#fff;
-  font-size:15px; font-weight:700; color:var(--ink); min-width:130px;
+.field{display:flex; flex-direction:column; gap:4px}
+.field > label{
+  font-size:10.5px; font-weight:700; color:var(--muted);
+  text-transform:uppercase; letter-spacing:.09em;
 }
-.field select:focus,.field input:focus{outline:2px solid var(--accent); outline-offset:1px}
-.hint{
-  flex:1 1 320px; min-width:240px; font-size:12.5px; color:var(--muted);
-  border-left:3px solid var(--soft); padding-left:10px;
+.control{
+  border:1px solid var(--line-2); border-radius:var(--r-sm); background:#fff;
+  padding:8px 11px; font-size:14.5px; font-weight:600; color:var(--navy); min-width:132px;
+  transition:border-color .12s, box-shadow .12s;
 }
+.control:hover{border-color:#a9bad4}
+.control:focus{outline:none; border-color:var(--blue); box-shadow:0 0 0 3px rgba(0,112,192,.16)}
+.toolbar .hint{
+  flex:1 1 300px; min-width:220px; margin:0 0 2px;
+  font-size:12.5px; color:var(--muted); border-left:2px solid var(--soft); padding-left:12px;
+}
+.toolbar .acciones{display:flex; gap:8px; margin-left:auto}
 
-/* ---------- Pestañas (hojas del libro) ---------- */
-.tabs{display:flex; gap:2px; padding:0 22px; background:var(--panel); border-bottom:1px solid var(--line); overflow-x:auto}
-.tab{
-  border:1px solid transparent; border-bottom:none; background:none; cursor:pointer;
-  padding:9px 16px; font-size:13.5px; font-weight:700; color:var(--muted);
-  border-radius:8px 8px 0 0; white-space:nowrap; position:relative; top:1px;
+/* ---------- Botones ---------- */
+.btn{
+  cursor:pointer; border-radius:var(--r-sm); font-size:13.5px; font-weight:650;
+  padding:9px 15px; border:1px solid transparent; display:inline-flex;
+  align-items:center; justify-content:center; gap:8px; white-space:nowrap;
+  transition:background .12s, border-color .12s, box-shadow .12s, transform .06s;
 }
-.tab:hover{color:var(--ink); background:#f4f7fc}
-.tab[aria-selected="true"]{background:var(--bg); color:var(--ink); border-color:var(--line); border-bottom:1px solid var(--bg)}
-
-/* ---------- Contenedor ---------- */
-.wrap{max-width:1180px; margin:0 auto; padding:22px}
-.view[hidden]{display:none}
-
-/* ---------- Tarjetas de contrato (botones E-mail de la hoja CORREOS) ---------- */
-.grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(255px,1fr)); gap:16px}
-.card{
-  background:var(--panel); border:1px solid var(--line); border-radius:var(--radius);
-  box-shadow:var(--shadow); padding:16px; display:flex; flex-direction:column; gap:12px;
-}
-.card .logo{height:56px; display:flex; align-items:center; justify-content:center}
-.card .logo img{max-height:56px; max-width:100%}
-.card .logo .txtlogo{
-  font-size:19px; font-weight:800; color:var(--ink); letter-spacing:.5px; text-align:center;
-}
-.card h3{margin:0; font-size:16px; color:var(--ink); text-align:center}
-.card .meta{font-size:11.5px; color:var(--muted); text-align:center; line-height:1.35}
-.card .meta b{color:#33445f}
-.card .prev{
-  background:#f7f9fd; border:1px solid var(--line-soft); border-radius:8px; padding:8px 10px;
-  font-size:12.5px; color:var(--muted); display:flex; justify-content:space-between; align-items:baseline;
-}
-.card .prev strong{font-size:20px; color:var(--ink)}
-.card .actions{display:flex; gap:8px; margin-top:auto}
-
-/* ---------- Botón "E-mail" (réplica de la imagen del libro) ---------- */
+.btn:active{transform:translateY(1px)}
+.btn-pri{background:var(--blue); color:#fff; box-shadow:0 1px 2px rgba(0,112,192,.35)}
+.btn-pri:hover{background:var(--blue-600)}
+.btn-sec{background:#fff; border-color:var(--line-2); color:var(--navy)}
+.btn-sec:hover{border-color:var(--blue); background:var(--blue-050)}
+.btn-plain{background:transparent; color:var(--muted); padding:6px 10px; font-size:12.5px}
+.btn-plain:hover{color:var(--navy); background:var(--blue-050)}
 .btn-mail{
-  flex:1 1 auto; cursor:pointer; border:none; border-radius:999px; color:#fff;
-  font-size:15px; font-weight:700; letter-spacing:.4px; padding:10px 16px 10px 12px;
-  background:linear-gradient(180deg,#3a9be0 0%,#0f72c4 48%,#0a5ea6 52%,#0b6cb8 100%);
-  box-shadow:0 2px 4px rgba(0,32,96,.28), inset 0 1px 0 rgba(255,255,255,.45);
-  display:flex; align-items:center; justify-content:center; gap:9px;
+  background:var(--blue); color:#fff; box-shadow:0 1px 2px rgba(0,112,192,.35);
+  padding:10px 16px; font-size:14px; width:100%;
 }
-.btn-mail:hover{filter:brightness(1.08)}
-.btn-mail:active{transform:translateY(1px)}
+.btn-mail:hover{background:var(--blue-600)}
 .btn-mail .env{
-  width:24px; height:24px; border-radius:50%; background:rgba(255,255,255,.16);
-  border:1px solid rgba(255,255,255,.5); display:grid; place-items:center; font-size:12px;
+  width:22px; height:22px; border-radius:6px; background:rgba(255,255,255,.18);
+  display:grid; place-items:center; font-size:12px; flex:0 0 auto;
 }
-.btn-mail.cyan{background:linear-gradient(180deg,#7fe6ff 0%,#22c8f5 48%,#12b6e6 52%,#3ad2fb 100%)}
-.btn-ghost{
-  cursor:pointer; border:1px solid var(--line); background:#fff; color:var(--ink);
-  border-radius:8px; padding:9px 12px; font-size:13px; font-weight:700;
-}
-.btn-ghost:hover{background:#f2f6fc; border-color:var(--accent)}
+.btn-mail.alt{background:#0f7b4f; box-shadow:0 1px 2px rgba(15,123,79,.35)}
+.btn-mail.alt:hover{background:#0c6741}
 
-/* ---------- Botones anchos (TODOS LOS CONTRATOS / INFORMAR A SOAV) ---------- */
-.wide-row{display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:16px; margin-top:20px}
-.wide{
-  background:var(--panel); border:1px solid var(--line); border-radius:var(--radius);
-  box-shadow:var(--shadow); padding:16px; display:flex; flex-direction:column; gap:12px;
+/* ---------- Pestañas ---------- */
+.tabs{
+  background:var(--panel); border-bottom:1px solid var(--line);
+  padding:0 28px 10px; display:flex; gap:4px; overflow-x:auto;
 }
-.wide .cap{font-size:17px; font-weight:800; color:var(--ink); letter-spacing:.3px}
-.wide .btn-mail{flex:0 0 auto; align-self:flex-start; min-width:240px; margin-top:auto}
-.wide .cap.green{color:#1d7a4c}
-.wide p{margin:0; font-size:12.5px; color:var(--muted)}
-.linkbar{
-  margin-top:20px; background:#e8f5ec; border:1px solid #b7ddc6; border-radius:var(--radius);
-  padding:12px 16px; display:flex; align-items:center; gap:12px; flex-wrap:wrap; font-weight:700; color:#1d7a4c;
+.tab{
+  border:1px solid transparent; background:none; cursor:pointer; white-space:nowrap;
+  padding:7px 15px; font-size:13px; font-weight:650; color:var(--muted);
+  border-radius:999px; letter-spacing:.02em;
 }
-.linkbar a{font-size:22px; text-decoration:none}
-.linkbar .btn-ghost{margin-left:auto; font-weight:700}
+.tab:hover{color:var(--navy); background:var(--blue-050)}
+.tab[aria-selected="true"]{background:var(--navy); color:#fff}
+
+/* ---------- Estructura ---------- */
+.wrap{max-width:1220px; margin:0 auto; padding:26px 28px 60px}
+.view[hidden]{display:none}
+.seccion{
+  display:flex; align-items:baseline; gap:12px; margin:0 0 14px;
+}
+.seccion h2{font-size:12px; letter-spacing:.11em; text-transform:uppercase; color:var(--muted)}
+.seccion .regla{flex:1; height:1px; background:var(--line)}
+
+/* ---------- Tarjetas de contrato ---------- */
+.grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(258px,1fr)); gap:18px}
+.card{
+  background:var(--panel); border:1px solid var(--line); border-radius:var(--r-md);
+  box-shadow:var(--sh-1); display:flex; flex-direction:column; overflow:hidden;
+  transition:box-shadow .16s, border-color .16s, transform .16s;
+}
+.card:hover{box-shadow:var(--sh-2); border-color:var(--line-2); transform:translateY(-1px)}
+.card .marca{
+  height:74px; display:grid; place-items:center; padding:12px 18px;
+  background:linear-gradient(180deg,#fbfcfe,#f2f5fa); border-bottom:1px solid var(--line);
+}
+.card .marca img{max-height:44px; max-width:100%}
+.card .marca .rotulo{font-size:17px; font-weight:750; color:var(--navy); letter-spacing:.03em}
+.card .cuerpo{padding:16px 18px; display:flex; flex-direction:column; gap:12px; flex:1}
+.card h3{font-size:16.5px; color:var(--navy)}
+.card .sub{font-size:12.5px; color:var(--muted); margin:-8px 0 0}
+.card dl{margin:0; display:grid; grid-template-columns:auto 1fr; gap:3px 10px; font-size:12px}
+.card dt{color:var(--muted)}
+.card dd{margin:0; color:#33445f; font-weight:600}
+.cifra{
+  background:var(--blue-050); border:1px solid #d3e5f5; border-radius:var(--r-sm);
+  padding:10px 13px; display:flex; align-items:center; justify-content:space-between; gap:10px;
+}
+.cifra .et{font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--blue-600)}
+.cifra .va{font-size:25px; font-weight:700; color:var(--navy); line-height:1}
+.cifra.hecho{background:var(--ok-bg); border-color:#bfe3d0}
+.cifra.hecho .et{color:var(--ok)}
+.card dl{margin-bottom:auto}
+.card dd{word-break:break-word}
+.card .pie{display:flex; gap:8px; padding:0 18px 16px}
+.card .pie .btn-mail{flex:1 1 auto; min-width:0; padding:10px 12px}
+
+/* ---------- Acciones amplias ---------- */
+.acciones-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(330px,1fr)); gap:18px}
+.panel{
+  background:var(--panel); border:1px solid var(--line); border-radius:var(--r-md);
+  box-shadow:var(--sh-1); padding:18px; display:flex; flex-direction:column; gap:12px;
+}
+.panel h3{font-size:15px; color:var(--navy)}
+.panel p{margin:0; font-size:12.5px; color:var(--muted)}
+.panel code{
+  background:#eef2f8; border-radius:4px; padding:1px 5px; font-size:12px;
+  font-family:"Cascadia Mono",Consolas,monospace; color:#3a4a66;
+}
+.panel .btn-mail{margin-top:auto; align-self:flex-start; width:auto; min-width:232px}
+.enlace-fila{
+  margin-top:18px; background:var(--panel); border:1px solid var(--line); border-left:3px solid var(--ok);
+  border-radius:var(--r-md); box-shadow:var(--sh-1);
+  padding:14px 18px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+}
+.enlace-fila .txt{font-size:13.5px; font-weight:650; color:var(--navy)}
+.enlace-fila .carpeta{font-size:20px; text-decoration:none; line-height:1}
+.enlace-fila .btn{margin-left:auto}
+.nota{
+  margin-top:22px; background:#fffaf0; border:1px solid #f0dcb0; border-radius:var(--r-md);
+  padding:14px 18px; font-size:12.5px; color:#6a5316; line-height:1.55;
+}
+.nota b{color:#4c3a08}
+.nota i{color:#7a6224}
 
 /* ---------- Hojas de contrato ---------- */
-.sheet-head{
-  background:var(--panel); border:1px solid var(--line); border-radius:var(--radius);
-  box-shadow:var(--shadow); padding:16px; margin-bottom:16px;
+.ficha{
+  background:var(--panel); border:1px solid var(--line); border-radius:var(--r-md);
+  box-shadow:var(--sh-1); padding:18px; margin-bottom:18px;
 }
-.sheet-head .contrato{font-size:12.5px; color:var(--muted); line-height:1.4; margin:0 0 10px}
-.sheet-head .strip{display:flex; gap:20px; flex-wrap:wrap; font-size:13px}
-.sheet-head .strip div b{color:var(--muted); font-weight:700; text-transform:uppercase; font-size:11px; letter-spacing:.4px; display:block}
-.sheet-head .strip div span{color:var(--ink); font-weight:700}
-.sheet-title{
-  background:var(--accent); color:#fff; text-align:center; font-weight:700; letter-spacing:.5px;
-  padding:7px; border-radius:8px 8px 0 0; font-size:13.5px;
+.ficha .contrato{margin:0 0 14px; font-size:12.5px; color:var(--muted); line-height:1.5}
+.ficha .datos{display:flex; gap:28px; flex-wrap:wrap}
+.ficha .datos > div b{
+  display:block; font-size:10.5px; font-weight:700; letter-spacing:.09em;
+  text-transform:uppercase; color:var(--muted); margin-bottom:2px;
 }
-.tablewrap{overflow-x:auto; background:var(--panel); border:1px solid var(--line); border-top:none; border-radius:0 0 var(--radius) var(--radius); box-shadow:var(--shadow)}
-table.sheet{border-collapse:collapse; width:100%; font-size:13px}
-table.sheet th,table.sheet td{border:1px solid var(--line); padding:5px 7px; text-align:center; white-space:nowrap}
-table.sheet thead th{background:#dbe5f4; color:var(--ink); font-weight:700; font-size:11.5px; text-transform:uppercase; letter-spacing:.3px}
-table.sheet thead th.mescol{min-width:64px}
-table.sheet thead th.selmes{background:var(--accent); color:#fff}
-table.sheet td.subsis,table.sheet th.subsis{text-align:left; font-weight:700; color:var(--ink); min-width:230px; white-space:normal}
-table.sheet td.act{text-align:left; color:var(--muted); font-size:12px; min-width:150px}
-table.sheet tr.r-prog td{background:#fbfcfe}
+.ficha .datos > div span{font-size:14px; font-weight:650; color:var(--navy)}
+.rotulo-tabla{
+  background:var(--navy); color:#fff; text-align:center; font-weight:650; font-size:12.5px;
+  letter-spacing:.06em; padding:9px; border-radius:var(--r-md) var(--r-md) 0 0;
+}
+.tablewrap{
+  overflow-x:auto; background:var(--panel); border:1px solid var(--line); border-top:none;
+  border-radius:0 0 var(--r-md) var(--r-md); box-shadow:var(--sh-1);
+}
+table.sheet{border-collapse:separate; border-spacing:0; width:100%; font-size:13px; font-variant-numeric:tabular-nums}
+table.sheet th,table.sheet td{
+  border-right:1px solid var(--line); border-bottom:1px solid var(--line);
+  padding:6px 6px; text-align:center; white-space:nowrap;
+}
+table.sheet thead th{
+  background:#e8eef8; color:var(--navy); font-weight:700; font-size:10.5px;
+  text-transform:uppercase; letter-spacing:.06em; padding:9px 8px;
+  border-bottom:1px solid var(--line-2); position:sticky; top:0; z-index:4;
+}
+table.sheet thead th.mescol{min-width:56px; letter-spacing:.08em}
+table.sheet thead th.agregada{min-width:96px; max-width:96px; white-space:normal; line-height:1.25}
+table.sheet thead th.selmes{background:var(--blue); color:#fff}
+table.sheet td.subsis,table.sheet th.subsis{
+  text-align:left; font-weight:650; color:var(--navy); white-space:normal; line-height:1.3;
+}
+table.sheet td.act{text-align:left; color:var(--muted); font-size:12px}
+table.sheet tr.r-prog td{background:#fcfdff}
 table.sheet tr.r-real td{background:#fff}
-table.sheet tr.r-pct td{background:#f5f7fb; color:var(--muted); font-size:12px}
-table.sheet tr.grupo-total td{background:var(--soft); font-weight:700; color:var(--ink)}
-table.sheet td.selmes{box-shadow:inset 0 0 0 2px var(--accent)}
-/* Columnas SUBSISTEMA y Actuaciones fijas al desplazar la tabla en horizontal */
-table.sheet th.subsis,table.sheet td.subsis{position:sticky; left:0; z-index:3; width:232px; min-width:232px; background:#fff}
-table.sheet th.actcol,table.sheet td.act{position:sticky; left:232px; z-index:2; width:168px; min-width:168px; box-shadow:1px 0 0 var(--line)}
-table.sheet thead th.subsis,table.sheet thead th.actcol{z-index:5; background:#dbe5f4}
-table.sheet thead th.actcol{text-align:center}
-table.sheet tr.r-prog td.act{background:#fbfcfe}
-table.sheet tr.r-real td.act{background:#fff}
-table.sheet tr.r-pct td.act{background:#f5f7fb}
-table.sheet tr.grupo-total td.subsis,table.sheet tr.grupo-total td.act{background:var(--soft)}
+table.sheet tr.r-pct td{background:#f6f8fc; color:var(--muted); font-size:12px}
+table.sheet tr.grupo-total td{background:var(--soft); font-weight:700; color:var(--navy)}
+table.sheet tr.grupo-total td.act{color:var(--navy)}
+table.sheet td.selmes{box-shadow:inset 2px 0 0 var(--blue), inset -2px 0 0 var(--blue)}
 table.sheet input{
-  width:60px; border:1px solid transparent; border-radius:4px; padding:3px 4px; text-align:center;
-  background:transparent; font-size:13px; font-weight:600; color:var(--ink);
+  width:52px; border:1px solid transparent; border-radius:5px; padding:3px 5px; text-align:center;
+  background:transparent; font-size:13px; font-weight:600; color:var(--navy);
+  font-variant-numeric:tabular-nums;
 }
-table.sheet input:hover{border-color:var(--line)}
-table.sheet input:focus{outline:none; border-color:var(--accent); background:#fff; box-shadow:0 0 0 2px rgba(0,112,192,.18)}
-table.sheet input:read-only{color:var(--muted); font-weight:700}
-.pct-ok{color:#1d7a4c; font-weight:700}
-.pct-bad{color:var(--warn); font-weight:700}
-.sheet-tools{display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin:14px 0 4px}
-.sheet-tools .spacer{flex:1}
-.obs{margin-top:16px}
-.obs label{font-size:11.5px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.5px}
+table.sheet input::-webkit-outer-spin-button,
+table.sheet input::-webkit-inner-spin-button{-webkit-appearance:none; margin:0}
+table.sheet input[type=number]{-moz-appearance:textfield}
+table.sheet input:hover{border-color:var(--line-2)}
+table.sheet input:focus{outline:none; border-color:var(--blue); background:#fff; box-shadow:0 0 0 3px rgba(0,112,192,.16)}
+/* Columnas SUBSISTEMA y Actuaciones fijas al desplazar en horizontal */
+table.sheet th.subsis,table.sheet td.subsis{position:sticky; left:0; z-index:3; width:206px; min-width:206px; background:#fff}
+table.sheet th.actcol,table.sheet td.act{position:sticky; left:206px; z-index:2; width:152px; min-width:152px; border-right:1px solid var(--line-2)}
+table.sheet thead th.subsis,table.sheet thead th.actcol{z-index:6; background:#e8eef8}
+table.sheet thead th.actcol{text-align:center}
+table.sheet tr.r-prog td.act{background:#fcfdff}
+table.sheet tr.r-real td.act{background:#fff}
+table.sheet tr.r-pct td.act{background:#f6f8fc}
+table.sheet tr.grupo-total td.subsis,table.sheet tr.grupo-total td.act{background:var(--soft)}
+.pct-ok{color:var(--ok); font-weight:700}
+.pct-bad{color:var(--warn); font-weight:650}
+.barra-hoja{display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin:16px 0 4px}
+.barra-hoja .espacio{flex:1}
+.check{display:flex; gap:7px; align-items:center; font-size:12.5px; font-weight:650; color:var(--muted); cursor:pointer}
+.check input{width:15px; height:15px; accent-color:var(--blue)}
+.obs{margin-top:18px}
+.obs label{
+  display:block; margin-bottom:5px; font-size:10.5px; font-weight:700;
+  text-transform:uppercase; letter-spacing:.09em; color:var(--muted);
+}
 .obs textarea{
-  width:100%; min-height:80px; border:1px solid var(--line); border-radius:8px; padding:10px;
-  background:var(--panel); resize:vertical; font-size:13.5px;
+  width:100%; min-height:86px; border:1px solid var(--line-2); border-radius:var(--r-sm);
+  padding:11px 13px; background:var(--panel); resize:vertical; font-size:13.5px; line-height:1.5;
 }
-.firmas{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:12px; margin-top:16px}
+.obs textarea:focus{outline:none; border-color:var(--blue); box-shadow:0 0 0 3px rgba(0,112,192,.16)}
+.firmas{display:grid; grid-template-columns:repeat(auto-fit,minmax(228px,1fr)); gap:12px; margin-top:18px}
 .firma{
-  background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:10px 12px;
-  font-size:11.5px; color:var(--muted); white-space:pre-line; min-height:92px;
+  background:var(--panel); border:1px solid var(--line); border-radius:var(--r-sm);
+  padding:12px 14px; font-size:11.5px; color:var(--muted); white-space:pre-line; min-height:96px; line-height:1.5;
 }
-.firma b{display:block; color:var(--ink); font-size:12.5px; margin-bottom:4px}
+.firma b{display:block; color:var(--navy); font-size:12.5px; margin-bottom:5px; letter-spacing:.01em}
 
-/* ---------- Modal de correo ---------- */
+/* ---------- Modal ---------- */
 .modal-back{
-  position:fixed; inset:0; background:rgba(9,22,45,.55); display:grid; place-items:center;
-  padding:20px; z-index:100;
+  position:fixed; inset:0; background:rgba(8,20,45,.55); backdrop-filter:blur(2px);
+  display:grid; place-items:center; padding:22px; z-index:100;
 }
 .modal{
-  background:var(--panel); border-radius:12px; box-shadow:0 24px 60px rgba(0,20,60,.35);
-  width:min(860px,100%); max-height:92vh; display:flex; flex-direction:column; overflow:hidden;
+  background:var(--panel); border-radius:var(--r-lg); box-shadow:var(--sh-3);
+  width:min(880px,100%); max-height:92vh; display:flex; flex-direction:column; overflow:hidden;
 }
-.modal header{background:var(--ink); color:#fff; padding:12px 18px; display:flex; align-items:center; gap:12px}
-.modal header h2{margin:0; font-size:16px; flex:1}
-.modal header .close{background:none; border:none; color:#fff; font-size:22px; cursor:pointer; line-height:1; padding:0 4px}
-.modal .body{overflow:auto; padding:16px 18px}
-.hdrs{display:grid; grid-template-columns:auto 1fr; gap:6px 12px; font-size:13px; margin-bottom:14px}
-.hdrs .k{font-weight:700; color:var(--muted); text-transform:uppercase; font-size:11px; letter-spacing:.4px; padding-top:3px}
-.hdrs .v{color:#22334f; word-break:break-word}
-.hdrs .v.subject{font-weight:700; color:var(--ink); font-size:14.5px}
+.modal > header{
+  background:var(--navy); color:#fff; padding:14px 20px; display:flex; align-items:center; gap:14px;
+}
+.modal > header h2{font-size:16px; flex:1}
+.modal > header .close{
+  background:none; border:none; color:#fff; font-size:20px; cursor:pointer;
+  line-height:1; padding:2px 6px; border-radius:6px; opacity:.75;
+}
+.modal > header .close:hover{opacity:1; background:rgba(255,255,255,.14)}
+.modal .body{overflow:auto; padding:18px 20px}
+.modal .body > p{margin:0 0 12px; font-size:13px; color:var(--muted)}
+.hdrs{display:grid; grid-template-columns:auto 1fr; gap:7px 14px; font-size:13px; margin-bottom:16px}
+.hdrs .k{
+  font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:.09em;
+  color:var(--muted); padding-top:3px;
+}
+.hdrs .v{color:#2a3b57; word-break:break-word}
+.hdrs .v.subject{font-weight:700; color:var(--navy); font-size:14.5px}
 .mailprev{
-  border:1px solid var(--line); border-radius:8px; padding:14px; background:#fff; overflow-x:auto;
+  border:1px solid var(--line); border-radius:var(--r-sm); padding:16px 18px;
+  background:#fff; overflow-x:auto;
 }
-.mailprev .sigfirma{margin-top:14px; padding-top:10px; border-top:1px solid var(--line-soft)}
-.mailprev .sigslot{margin-top:14px; padding-top:10px; border-top:1px dashed var(--line); font-size:12px; color:var(--muted); font-style:italic}
+.mailprev .sigfirma{margin-top:14px; padding-top:12px; border-top:1px solid var(--line)}
+.mailprev .sigslot{
+  margin-top:16px; padding-top:11px; border-top:1px dashed var(--line-2);
+  font-size:12px; color:var(--muted); line-height:1.6;
+}
 .firmaedit{
-  border:1px solid var(--line); border-radius:8px; padding:12px; min-height:150px;
-  background:#fff; overflow:auto; max-height:320px;
+  border:1px solid var(--line-2); border-radius:var(--r-sm); padding:14px; min-height:160px;
+  background:#fff; overflow:auto; max-height:330px;
 }
-.firmaedit:focus{outline:2px solid var(--accent); outline-offset:1px}
-.modal footer{
-  border-top:1px solid var(--line); padding:12px 18px; display:flex; gap:8px; flex-wrap:wrap;
-  background:#f7f9fd;
+.firmaedit:focus{outline:none; border-color:var(--blue); box-shadow:0 0 0 3px rgba(0,112,192,.16)}
+.modal > footer{
+  border-top:1px solid var(--line); padding:13px 20px; display:flex; gap:8px;
+  flex-wrap:wrap; background:#fafbfd;
 }
-.modal footer .spacer{flex:1}
-.btn-pri{
-  cursor:pointer; border:none; border-radius:8px; padding:9px 16px; font-size:13.5px; font-weight:700;
-  background:var(--accent); color:#fff;
+.modal > footer .espacio{flex:1}
+.cola{display:flex; align-items:center; gap:10px; font-size:12px; color:#b9c8e6}
+.cola .pill{
+  background:rgba(255,255,255,.15); color:#fff; border-radius:999px;
+  padding:3px 11px; font-weight:650; font-size:12px;
 }
-.btn-pri:hover{background:var(--accent-dark)}
-.queue{
-  display:flex; align-items:center; gap:10px; font-size:12.5px; color:var(--muted); font-weight:700;
-}
-.queue .pill{background:var(--soft); color:var(--ink); border-radius:999px; padding:2px 10px}
+.lista-opciones{display:flex; flex-direction:column; gap:8px}
+.lista-opciones .btn{justify-content:flex-start; text-align:left}
 
 /* ---------- Avisos ---------- */
 .toast{
-  position:fixed; left:50%; bottom:24px; transform:translateX(-50%);
-  background:var(--ink); color:#fff; padding:10px 18px; border-radius:999px; font-size:13.5px;
-  box-shadow:0 8px 24px rgba(0,20,60,.3); z-index:200;
+  position:fixed; left:50%; bottom:26px; transform:translateX(-50%);
+  background:var(--navy); color:#fff; padding:11px 20px; border-radius:999px;
+  font-size:13.5px; font-weight:600; box-shadow:0 10px 30px rgba(6,18,42,.32); z-index:200;
 }
-.note{
-  background:#fff8e6; border:1px solid #f0d89a; color:#6b5312; border-radius:8px;
-  padding:10px 14px; font-size:12.5px; margin-top:18px;
+.pie-pagina{
+  max-width:1220px; margin:0 auto; padding:0 28px 34px;
+  font-size:11.5px; color:#8291a8; display:flex; gap:8px; flex-wrap:wrap;
 }
-.note b{color:#4a3a08}
-@media print{.controlbar,.tabs,.sheet-tools,.actions,.wide-row,.linkbar{display:none !important}}
+@media (max-width:640px){
+  .appbar,.toolbar,.tabs,.wrap,.pie-pagina{padding-left:16px; padding-right:16px}
+  .toolbar .acciones{margin-left:0}
+}
+@media print{
+  .toolbar,.tabs,.barra-hoja,.card .pie,.acciones-grid,.enlace-fila,.nota,.pie-pagina{display:none !important}
+  body{background:#fff}
+}
 </style>
 </head>
 <body>
 
-<div class="titlebar">
-  <h1>CORREOS MENSUALES · SOLICITUD NÚMERO PREVENTIVOS</h1>
-  <div class="sub">Eje Este de Alta Velocidad · Teleco</div>
-</div>
+<header class="appbar">
+  <span class="mark" aria-hidden="true">✉</span>
+  <div>
+    <h1>Correos mensuales de preventivos</h1>
+    <p class="claim">Solicitud del número de preventivos realizados · Eje Este de Alta Velocidad</p>
+  </div>
+  <div class="org">ADIF · INECO</div>
+</header>
 
-<div class="controlbar">
+<div class="toolbar">
   <div class="field">
-    <label for="mes">Seleccionar mes</label>
-    <select id="mes"></select>
+    <label for="mes">Mes</label>
+    <select id="mes" class="control"></select>
   </div>
   <div class="field">
     <label for="ano">Año</label>
-    <input id="ano" type="number" min="2000" max="2100" step="1" value="2026">
+    <input id="ano" class="control" type="number" min="2000" max="2100" step="1" value="2026" style="min-width:96px">
   </div>
-  <div class="hint">
-    Al pulsar el botón <b>E-mail</b> se prepara el mensaje con la solicitud del número de
-    preventivos realizados: revisa, copia el cuerpo o descarga el <b>.eml</b> para abrirlo en Outlook.
+  <p class="hint">
+    Cada botón <b>Preparar correo</b> compone el mensaje de solicitud con los preventivos
+    previstos del mes: revísalo, cópialo o descárgalo como <b>.eml</b> para abrirlo en Outlook.
+  </p>
+  <div class="acciones">
+    <button class="btn btn-sec" id="btnExcel" title="Descargar un libro .xlsx con las cinco hojas">⤓ Excel</button>
+    <button class="btn btn-sec" id="btnDatos" title="Firma, exportar, importar y restablecer">Datos ▾</button>
   </div>
-  <button class="btn-ghost" id="btnExcel" title="Descargar un libro .xlsx con las cuatro hojas">⤓ Excel</button>
-  <button class="btn-ghost" id="btnDatos" title="Exportar / importar / restablecer los datos">Datos ▾</button>
 </div>
 
-<div class="tabs" id="tabs" role="tablist"></div>
+<nav class="tabs" id="tabs" role="tablist" aria-label="Hojas del libro"></nav>
 
-<div class="wrap">
+<main class="wrap">
   <!-- ================= HOJA CORREOS ================= -->
   <section class="view" id="view-CORREOS" role="tabpanel">
+    <div class="seccion"><h2>Contratos</h2><span class="regla"></span></div>
     <div class="grid" id="cards"></div>
 
-    <div class="wide-row">
-      <div class="wide">
-        <div class="cap">TODOS LOS CONTRATOS EJE ESTE</div>
-        <p>Genera en secuencia los cuatro correos de solicitud (CHATO → SALAVE → TELICE → MAVENTS),
-           igual que la macro <code>CorreoLAVESTE</code>.</p>
-        <button class="btn-mail" id="btnTodos"><span class="env">✉</span> E-mail · los 4 contratos</button>
+    <div class="seccion" style="margin-top:28px"><h2>Envíos agrupados</h2><span class="regla"></span></div>
+    <div class="acciones-grid">
+      <div class="panel">
+        <h3>Todos los contratos del Eje Este</h3>
+        <p>Prepara en secuencia los cuatro correos de solicitud —CHATO, SALAVE, TELICE y
+           MAVENTS—, en el mismo orden que la macro <code>CorreoLAVESTE</code>.</p>
+        <button class="btn btn-mail" id="btnTodos"><span class="env">✉</span> Preparar los 4 correos</button>
       </div>
-      <div class="wide">
-        <div class="cap green">INFORMAR A SOAV</div>
-        <p>Aviso a la Subdirección de Operaciones AV de que los Excel del mes ya están subidos a
-           OneDrive (macro <code>CorreoSOAV</code>).</p>
+      <div class="panel">
+        <h3>Informar a SOAV</h3>
+        <p>Aviso a la Subdirección de Operaciones AV de que los Excel del mes ya están
+           subidos a OneDrive (macro <code>CorreoSOAV</code>).</p>
         <div class="field">
           <label for="soavMes">Mes del aviso</label>
-          <select id="soavMes"></select>
+          <select id="soavMes" class="control" style="min-width:270px"></select>
         </div>
-        <button class="btn-mail cyan" id="btnSOAV"><span class="env">✉</span> E-mail · SOAV</button>
+        <button class="btn btn-mail alt" id="btnSOAV"><span class="env">✉</span> Preparar correo a SOAV</button>
       </div>
     </div>
 
-    <div class="linkbar">
-      <span>Antes, subir archivos EXCEL a</span>
-      <a id="lnkOneDrive" href="#" target="_blank" rel="noopener" title="Carpeta OneDrive de ADIF">📂</a>
-      <button class="btn-ghost" id="btnAbrirWebs" title="Macro AbrirWebsEnNuevasVentanas">
+    <div class="enlace-fila">
+      <a class="carpeta" id="lnkOneDrive" href="#" target="_blank" rel="noopener"
+         title="Carpeta de ADIF en SharePoint">📂</a>
+      <span class="txt">Antes, subir los archivos Excel a la carpeta de ADIF</span>
+      <button class="btn btn-sec" id="btnAbrirWebs" title="Macro AbrirWebsEnNuevasVentanas">
         Abrir carpetas SharePoint (INECO + ADIF)
       </button>
     </div>
 
-    <div class="note" id="notas"></div>
+    <div class="nota" id="notas"></div>
   </section>
 
   <!-- Las hojas de contrato se generan por JS -->
   <div id="sheetViews"></div>
-</div>
+</main>
+
+<footer class="pie-pagina">
+  <span>Réplica de <b>Solicitud_Preventivos__Correos_Mensuales_2026.xlsm</b>.</span>
+  <span>Los datos se guardan en este navegador.</span>
+</footer>
 
 <script>
 "use strict";
@@ -547,6 +662,7 @@ function normNum(v){
    3. CÁLCULOS DE HOJA
    ========================================================================== */
 const contrato = id => CONTRATOS.find(c => c.id === id);
+const cifra = n => new Intl.NumberFormat("es-ES").format(n);
 const num = v => (v === null || v === undefined) ? 0 : Number(v);
 
 /** Valor de una celda (fila de subsistema, mes 0-11) para "prog" o "real". */
@@ -620,7 +736,10 @@ function colLetra(n){
    CorreoSALAVE, CorreoTELICE y CorreoCHATO (mismas etiquetas, mismos estilos
    en línea, mismo orden de filas y misma fila TOTAL).
    ========================================================================== */
-const P = "font-family: Calibri; font-size: 11pt; color: #002060;";
+const F = "font-family: Calibri; font-size: 11pt;";
+const P = F + " color: #002060;";
+const TD = F + " color: #002060; text-align: ";
+const TH = F + " color: #FFFFFF; background-color: #0070C0; text-align: center;";
 
 function cuerpoContrato(id, mesIdx, ano){
   const c = contrato(id);
@@ -631,23 +750,23 @@ function cuerpoContrato(id, mesIdx, ano){
   for(const f of filas){
     const etiqueta = f.labelCorreo || f.label;
     const valor = celda(id, f.fila, mesIdx, "prog");
-    tabla += "<tr><td style='text-align: left;'>" + etiqueta + "</td>" +
-             "<td style='text-align: center;'>" + (valor === null ? "" : valor) + "</td>" +
-             "<td style='text-align: center;'></td></tr>";
+    tabla += "<tr><td style='" + TD + "left;'>" + etiqueta + "</td>" +
+             "<td style='" + TD + "center;'>" + (valor === null ? "" : valor) + "</td>" +
+             "<td style='" + TD + "center;'></td></tr>";
   }
   const tot = total(id, mesIdx, "prog");
 
   return "<p style='" + P + "'>Buenos días.</p>" +
     "<p style='" + P + "'>Por favor, cuando tengáis los datos, completad la siguiente tabla con los <b>preventivos realizados</b> en <b>" + MES + "</b> de <b>" + ano + "</b>.</p>" +
-    "<table border='1' style='border-collapse: collapse; table-layout: fixed; font-family: Calibri; font-size: 11pt; color: #002060;'>" +
-    "<tr><th rowspan='2' style='text-align: center; width: 50%; background-color: #0070C0; color: #FFFFFF;'>SUBSISTEMA</th>" +
-    "<th colspan='2' style='text-align: center; background-color: #0070C0; color: #FFFFFF;'>PREVENTIVOS " + MES + " " + ano + "</th></tr>" +
-    "<tr><td style='text-align: center; width: 25%; background-color: #0070C0; color: #FFFFFF;'>PREVISTO</td>" +
-    "<td style='text-align: center; width: 25%; background-color: #0070C0; color: #FFFFFF;'>REALIZADO</td></tr>" +
+    "<table border='1' style='border-collapse: collapse; table-layout: fixed; " + P + "'>" +
+    "<tr><th rowspan='2' style='" + TH + " width: 50%;'>SUBSISTEMA</th>" +
+    "<th colspan='2' style='" + TH + "'>PREVENTIVOS " + MES + " " + ano + "</th></tr>" +
+    "<tr><td style='" + TH + " width: 25%;'>PREVISTO</td>" +
+    "<td style='" + TH + " width: 25%;'>REALIZADO</td></tr>" +
     tabla +
-    "<tr style='background-color: #B4C6E7;'><td style='text-align: left; font-weight: bold;'>TOTAL</td>" +
-    "<td style='text-align: center; font-weight: bold;'>" + tot + "</td>" +
-    "<td style='text-align: center;'></td></tr>" +
+    "<tr style='background-color: #B4C6E7;'><td style='" + TD + "left; font-weight: bold;'>TOTAL</td>" +
+    "<td style='" + TD + "center; font-weight: bold;'>" + tot + "</td>" +
+    "<td style='" + TD + "center;'></td></tr>" +
     "</table>" +
     "<p style='" + P + "'>Si tenéis cualquier comentario, lo añadimos al campo observaciones.</p>" +
     "<p style='" + P + "'><b>OBSERVACIONES:</b></p>" +
@@ -671,12 +790,15 @@ function correoContrato(id, mesIdx, ano){
 /** Correo a SOAV (macro CorreoSOAV): por defecto usa el mes anterior al actual. */
 function correoSOAV(mesIdx, ano){
   const mesAno = MESES[mesIdx].toUpperCase() + " " + ano;
+  // El VBA usaba <font size='11pt'>, que no es un tamaño válido y Outlook
+  // ignoraba: se sustituye por estilos en línea con Calibri 11.
   const cuerpo =
-    "<html><body><font face='Calibri' size='11pt' color='#002060'>" +
-    SOAV.saludo + "<br><br>" +
-    "Ya están subidos a <a href='" + URL_SOAV_ONEDRIVE + "'>One Drive</a> los Excel de <b>" + mesAno +
-    "</b> de los cuatro contratos de <b>TELECO ESTE</b>.<br><br>" +
-    "Un saludo.<br><br><br><br></font></body></html>";
+    "<div style='" + P + "'>" +
+    "<p style='" + P + "'>" + SOAV.saludo + "</p>" +
+    "<p style='" + P + "'>Ya están subidos a <a href='" + URL_SOAV_ONEDRIVE +
+    "' style='" + F + " color: #0070C0;'>One Drive</a> los Excel de <b>" + mesAno +
+    "</b> de los cuatro contratos de <b>TELECO ESTE</b>.</p>" +
+    "<p style='" + P + "'>Un saludo.</p></div>";
   return {
     clave: "SOAV",
     titulo: "Informe a SOAV",
@@ -737,8 +859,14 @@ function b64utf8(txt){
  *  cierra el cuerpo: así Outlook no puede colar su firma automática entre el
  *  saludo y la tabla, que es lo que hacía al encontrar párrafos sueltos. */
 function construirEml(correo){
-  const html = "<html><head><meta charset=\"utf-8\"></head><body>" +
-    "<div>" + correo.cuerpo + bloqueFirma() + "</div></body></html>";
+  // Outlook inserta su firma automática detrás del primer bloque que encuentra,
+  // y con párrafos sueltos la colaba entre el saludo y la tabla. Metiendo todo
+  // el mensaje en una única celda de tabla sólo queda un bloque, así que la
+  // firma cae detrás del mensaje completo.
+  const html = '<html><head><meta charset="utf-8"></head><body>' +
+    "<table cellpadding='0' cellspacing='0' border='0' style='border-collapse: collapse;'>" +
+    "<tr><td style='" + P + " padding: 0;'>" + correo.cuerpo + bloqueFirma() + "</td></tr>" +
+    "</table></body></html>";
   return [
     "X-Unsent: 1",
     "MIME-Version: 1.0",
@@ -1195,25 +1323,29 @@ function pintarTarjetas(){
   const cont = $("#cards");
   cont.innerHTML = "";
   for(const c of [...CONTRATOS].sort((a,b) => a.orden - b.orden)){
-    const previsto = total(c.id, estado.mes, "prog");
-    const realizado = total(c.id, estado.mes, "real");
-    cont.appendChild(el("div", {class:"card"},
-      el("div", {class:"logo"},
-        c.logo ? el("img", {src:c.logo, alt:"Logotipo " + c.rotulo})
-               : el("div", {class:"txtlogo"}, c.rotulo)),
-      el("h3", null, c.id),
-      el("div", {class:"meta", html:
-        "<b>Nº expediente:</b> " + c.expediente + "<br>Mantenedor: " + c.mantenedor}),
-      el("div", {class:"prev"},
-        el("span", null, "Previsto " + MESES[estado.mes]),
-        el("strong", null, String(previsto))),
-      realizado ? el("div", {class:"prev"},
-        el("span", null, "Realizado registrado"),
-        el("strong", null, String(realizado))) : null,
-      el("div", {class:"actions"},
-        el("button", {class:"btn-mail", onclick:() => abrirCola([correoContrato(c.id, estado.mes, estado.ano)])},
-          el("span", {class:"env"}, "✉"), "E-mail"),
-        el("button", {class:"btn-ghost", title:"Ver la hoja " + c.hoja,
+    const previsto  = total(c.id, estado.mes, "prog");
+    const realizado = totalReal(c.id, estado.mes);
+    cont.appendChild(el("article", {class:"card"},
+      el("div", {class:"marca"},
+        c.logo ? el("img", {src:c.logo, alt:"Logotipo de " + c.rotulo})
+               : el("div", {class:"rotulo"}, c.rotulo)),
+      el("div", {class:"cuerpo"},
+        el("h3", null, c.id),
+        el("p", {class:"sub"}, c.mantenedor),
+        el("dl", null,
+          el("dt", null, "Expediente"), el("dd", null, c.expediente),
+          el("dt", null, "Objetivo anual"), el("dd", {class:"num"}, cifra(anualTotal(c.id, "prog")))),
+        el("div", {class:"cifra"},
+          el("span", {class:"et"}, "Previsto " + MESES[estado.mes]),
+          el("span", {class:"va num"}, cifra(previsto))),
+        realizado === null ? null : el("div", {class:"cifra hecho"},
+          el("span", {class:"et"}, "Realizado"),
+          el("span", {class:"va num"}, cifra(realizado)))),
+      el("div", {class:"pie"},
+        el("button", {class:"btn btn-mail",
+          onclick:() => abrirCola([correoContrato(c.id, estado.mes, estado.ano)])},
+          el("span", {class:"env"}, "✉"), "Preparar correo"),
+        el("button", {class:"btn btn-sec", title:"Abrir la hoja " + c.hoja,
           onclick:() => { estado.hoja = c.id; pintarTabs(); mostrarVista(); }}, "Hoja"))
     ));
   }
@@ -1231,14 +1363,16 @@ function pintarEnlaces(){
   }
 
   $("#notas").innerHTML =
-    "<b>Notas de la conversión:</b> " +
+    "<b>Notas de la conversión.</b> " +
     "Los valores <i>PREVISTO</i> y la fila <i>TOTAL</i> del correo salen de las filas " +
     "<i>Programadas</i> de cada hoja, igual que en las macros. " +
-    "<i>OBJETIVO ANUAL</i> se calcula como suma de los 12 meses y " +
-    "<i>CONSECUCIÓN ACUMULADA</i> como suma de enero hasta el mes seleccionado " +
-    "(en el libro eran valores fijos ya desfasados). " +
-    "En TELICE se respeta el orden de la hoja (PLO, RACA, RACO): la macro original " +
-    "etiquetaba esas dos últimas filas al revés.";
+    "<i>Objetivo anual</i> se calcula como suma de los doce meses y " +
+    "<i>consecución acumulada</i> como suma de enero al mes seleccionado; en el libro " +
+    "eran valores fijos ya desfasados. " +
+    "En TELICE el orden es <i>PLO, RACA, RACO</i>: la macro original intercambiaba las " +
+    "etiquetas de las dos últimas filas. " +
+    "Todo el texto de los correos va en Calibri 11, repetido en cada celda de la tabla " +
+    "porque Outlook no hereda la fuente desde <i>&lt;table&gt;</i>.";
 }
 
 /* ============================================================================
@@ -1257,17 +1391,17 @@ function pintarHoja(id){
   const v = $("#view-" + id);
   v.innerHTML = "";
 
-  v.appendChild(el("div", {class:"sheet-head"},
+  v.appendChild(el("div", {class:"ficha"},
     el("p", {class:"contrato"}, c.contrato),
-    el("div", {class:"strip"},
+    el("div", {class:"datos"},
       el("div", null, el("b", null, "Nº expediente"), el("span", null, c.expediente)),
       el("div", null, el("b", null, "Eje"), el("span", null, c.eje)),
       el("div", null, el("b", null, "Mantenedor"), el("span", null, c.mantenedor)),
-      el("div", null, el("b", null, "Certificación trabajos del mes de"),
+      el("div", null, el("b", null, "Certificación del mes de"),
         el("span", null, MESES[estado.mes] + " " + estado.ano)))
   ));
 
-  v.appendChild(el("div", {class:"sheet-title"}, c.bloque));
+  v.appendChild(el("div", {class:"rotulo-tabla"}, c.bloque));
   const wrap = el("div", {class:"tablewrap"}, tablaHoja(c));
   v.appendChild(wrap);
   // Desplazar la tabla hasta la columna del mes seleccionado, cuadrando el
@@ -1275,18 +1409,18 @@ function pintarHoja(id){
   // columna por debajo de las dos primeras, que quedan fijas.
   requestAnimationFrame(() => ajustarScroll(wrap));
 
-  v.appendChild(el("div", {class:"sheet-tools"},
-    el("label", {style:"display:flex;gap:6px;align-items:center;font-size:13px;font-weight:700;color:var(--muted)"},
+  v.appendChild(el("div", {class:"barra-hoja"},
+    el("label", {class:"check"},
       el("input", {type:"checkbox", ...(estado.verVacias ? {checked:"checked"} : {}),
         onchange:(e) => { estado.verVacias = e.target.checked; guardar(); pintarHoja(id); }}),
       "Mostrar filas sin subsistema"),
-    el("span", {class:"spacer"}),
-    el("button", {class:"btn-ghost", onclick:() => { copiarRealizadasDesdeCorreo(id); }},
-      "Rellenar Realizadas = Programadas"),
-    el("button", {class:"btn-ghost", onclick:exportarExcel}, "⤓ Excel"),
-    el("button", {class:"btn-mail", style:"flex:0 0 auto",
+    el("span", {class:"espacio"}),
+    el("button", {class:"btn btn-sec", onclick:() => { copiarRealizadasDesdeCorreo(id); }},
+      "Realizadas = Programadas"),
+    el("button", {class:"btn btn-sec", onclick:exportarExcel}, "⤓ Excel"),
+    el("button", {class:"btn btn-mail", style:"width:auto",
       onclick:() => abrirCola([correoContrato(id, estado.mes, estado.ano)])},
-      el("span", {class:"env"}, "✉"), "E-mail " + id)
+      el("span", {class:"env"}, "✉"), "Preparar correo")
   ));
 
   const obs = el("textarea", {placeholder:"Observaciones de la certificación…"});
@@ -1304,7 +1438,7 @@ function pintarHoja(id){
 function anchoFijo(wrap){
   const a = wrap.querySelector("thead th.subsis");
   const b = wrap.querySelector("thead th.actcol");
-  return (a ? a.offsetWidth : 232) + (b ? b.offsetWidth : 168);
+  return (a ? a.offsetWidth : 206) + (b ? b.offsetWidth : 152);
 }
 
 function ajustarScroll(wrap){
@@ -1312,6 +1446,9 @@ function ajustarScroll(wrap){
   if(!sel || wrap.scrollWidth <= wrap.clientWidth) return;
   const fijo = anchoFijo(wrap);
   const minimo = sel.offsetLeft + sel.offsetWidth - wrap.clientWidth + 8;
+  // Si el mes ya se ve sin desplazar, se dejan a la vista las columnas de
+  // objetivo anual y acumulado, que son las primeras.
+  if(minimo <= 0){ wrap.scrollLeft = 0; return; }
   const columnas = Array.from(wrap.querySelectorAll("thead th")).slice(2);
   const destino = columnas.find(c => (c.offsetLeft - fijo) >= minimo);
   wrap.scrollLeft = Math.max(0, destino ? destino.offsetLeft - fijo : minimo);
@@ -1325,12 +1462,12 @@ function tablaHoja(c){
     el("tr", null,
       el("th", {class:"subsis"}, c.colSubsistema),
       el("th", {class:"actcol"}, "Actuaciones"),
-      el("th", null, c.colAnual),
-      el("th", null, c.colAcum),
+      el("th", {class:"agregada"}, c.colAnual),
+      el("th", {class:"agregada"}, c.colAcum),
       MESES.map((m,i) => el("th", {
         class:"mescol" + (i === estado.mes ? " selmes" : ""),
-        title:"Columna " + colLetra(c.primeraColumnaMes + i) + " del Excel"
-      }, m))
+        title:m + " · columna " + colLetra(c.primeraColumnaMes + i) + " del Excel"
+      }, MESES_ABR[i].toUpperCase()))
     ));
 
   const tbody = el("tbody");
@@ -1451,24 +1588,23 @@ function pintarModal(){
   if(estado.firma){
     cuerpoHtml.appendChild(el("div", {class:"sigfirma", html: estado.firma}));
     cuerpoHtml.appendChild(el("div", {class:"sigslot"},
-      "▸ Tu firma va aquí, al final, en el .eml descargado. Si Outlook además " +
-      "inserta la suya, desactívala para mensajes nuevos.",
-      el("button", {class:"btn-ghost", style:"margin-left:8px;padding:3px 8px;font-size:12px",
-        onclick:editarFirma}, "Editar firma")));
+      "Tu firma se añade aquí, al final, en el .eml descargado. Si Outlook además " +
+      "inserta la suya, desactívala para mensajes nuevos en Archivo → Opciones → " +
+      "Correo → Firmas. ",
+      el("button", {class:"btn btn-plain", onclick:editarFirma}, "Editar firma")));
   }else{
     cuerpoHtml.appendChild(el("div", {class:"sigslot"},
-      "▸ Outlook añadirá su firma automática, y no siempre al final. Para " +
-      "controlar dónde va, guarda aquí tu firma: ",
-      el("button", {class:"btn-ghost", style:"margin-left:4px;padding:3px 8px;font-size:12px",
-        onclick:editarFirma}, "Añadir mi firma")));
+      "Outlook añadirá aquí su firma automática. Si la coloca en otro sitio, guarda " +
+      "la tuya en la aplicación y desactiva la automática. ",
+      el("button", {class:"btn btn-plain", onclick:editarFirma}, "Añadir mi firma")));
   }
 
   const back = el("div", {class:"modal-back", onclick:(e) => { if(e.target === back) cerrarModal(); }},
     el("div", {class:"modal", role:"dialog", "aria-modal":"true"},
       el("header", null,
         el("h2", null, correo.titulo),
-        cola.length > 1 ? el("div", {class:"queue"},
-          el("span", {class:"pill"}, (colaIdx+1) + " / " + cola.length)) : null,
+        cola.length > 1 ? el("div", {class:"cola"},
+          el("span", {class:"pill"}, (colaIdx+1) + " de " + cola.length)) : null,
         el("button", {class:"close", title:"Cerrar", onclick:cerrarModal}, "×")),
       el("div", {class:"body"},
         el("div", {class:"hdrs"},
@@ -1477,22 +1613,22 @@ function pintarModal(){
           el("div", {class:"k"}, "Asunto"), el("div", {class:"v subject"}, correo.asunto)),
         cuerpoHtml),
       el("footer", null,
-        el("button", {class:"btn-pri", title:"Borrador listo para enviar, con tu firma al final",
-          onclick:() => descargarEml(correo)}, "⤓ Descargar .eml (Outlook)"),
-        el("button", {class:"btn-ghost",
+        el("button", {class:"btn btn-pri", title:"Borrador listo para enviar, con la firma al final",
+          onclick:() => descargarEml(correo)}, "⤓ Descargar .eml"),
+        el("button", {class:"btn btn-sec",
           title:"Copia sin firma: pégalo arriba del todo en un mensaje nuevo que ya tenga la tuya",
           onclick:() => copiarHtml(correo)}, "Copiar cuerpo"),
-        el("button", {class:"btn-ghost", onclick:() => copiarTexto(
+        el("button", {class:"btn btn-sec", onclick:() => copiarTexto(
           correo.para.map(soloEmail).join("; "), "Destinatarios copiados")}, "Copiar Para"),
-        el("button", {class:"btn-ghost", onclick:() => copiarTexto(
+        el("button", {class:"btn btn-sec", onclick:() => copiarTexto(
           correo.copia.map(soloEmail).join("; "), "Copia (CC) copiada")}, "Copiar CC"),
-        el("button", {class:"btn-ghost", onclick:() => abrirMailto(correo)}, "Abrir en cliente"),
-        el("span", {class:"spacer"}),
-        colaIdx > 0 ? el("button", {class:"btn-ghost",
+        el("button", {class:"btn btn-sec", onclick:() => abrirMailto(correo)}, "Abrir en cliente"),
+        el("span", {class:"espacio"}),
+        colaIdx > 0 ? el("button", {class:"btn btn-sec",
           onclick:() => { colaIdx--; pintarModal(); }}, "← Anterior") : null,
         colaIdx < cola.length - 1
-          ? el("button", {class:"btn-pri", onclick:() => { colaIdx++; pintarModal(); }}, "Siguiente →")
-          : el("button", {class:"btn-ghost", onclick:cerrarModal}, "Cerrar"))
+          ? el("button", {class:"btn btn-pri", onclick:() => { colaIdx++; pintarModal(); }}, "Siguiente →")
+          : el("button", {class:"btn btn-sec", onclick:cerrarModal}, "Cerrar"))
     ));
 
   document.body.appendChild(back);
@@ -1526,21 +1662,21 @@ function editarFirma(){
       el("header", null, el("h2", null, "Mi firma"),
         el("button", {class:"close", onclick:() => back.remove()}, "×")),
       el("div", {class:"body"},
-        el("p", {style:"margin:0 0 10px;font-size:13px;color:var(--muted)"},
+        el("p", null,
           "Abre un mensaje nuevo en Outlook, selecciona tu firma, cópiala (Ctrl+C) " +
           "y pégala aquí (Ctrl+V). Se añadirá al final de cada correo que descargues " +
           "como .eml, igual que hacía la macro."),
         zona),
       el("footer", null,
-        el("button", {class:"btn-pri", onclick:() => {
+        el("button", {class:"btn btn-pri", onclick:() => {
           estado.firma = zona.innerHTML.trim(); guardar(); back.remove();
           if(cola.length) pintarModal();
           aviso(estado.firma ? "Firma guardada" : "Firma vacía: se ha quitado");
         }}, "Guardar firma"),
-        el("button", {class:"btn-ghost", onclick:() => { zona.innerHTML = ""; zona.focus(); }},
+        el("button", {class:"btn btn-sec", onclick:() => { zona.innerHTML = ""; zona.focus(); }},
           "Vaciar"),
-        el("span", {class:"spacer"}),
-        el("button", {class:"btn-ghost", onclick:() => back.remove()}, "Cancelar"))
+        el("span", {class:"espacio"}),
+        el("button", {class:"btn btn-plain", onclick:() => back.remove()}, "Cancelar"))
     ));
   document.body.appendChild(back);
   zona.focus();
@@ -1559,11 +1695,11 @@ function menuDatos(){
     el("div", {class:"modal", style:"width:min(460px,100%)"},
       el("header", null, el("h2", null, "Datos"),
         el("button", {class:"close", onclick:() => back.remove()}, "×")),
-      el("div", {class:"body", style:"display:flex;flex-direction:column;gap:10px"},
-        opciones.map(([txt, fn]) =>
-          el("button", {class:"btn-ghost", style:"text-align:left",
-            onclick:() => { back.remove(); fn(); }}, txt)),
-        el("p", {style:"font-size:12.5px;color:var(--muted);margin:6px 0 0"},
+      el("div", {class:"body"},
+        el("div", {class:"lista-opciones"},
+          opciones.map(([txt, fn]) =>
+            el("button", {class:"btn btn-sec", onclick:() => { back.remove(); fn(); }}, txt))),
+        el("p", {style:"margin:12px 0 0"},
           "Los cambios se guardan automáticamente en este navegador."))
     ));
   document.body.appendChild(back);

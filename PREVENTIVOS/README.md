@@ -30,14 +30,24 @@ Desde el navegador no se puede automatizar Outlook, así que cada correo ofrece:
 - **Copiar Para / Copiar CC** — destinatarios al portapapeles.
 - **Abrir en cliente** — enlace `mailto:` (el cuerpo va en texto plano, es una limitación del protocolo).
 
-El HTML del cuerpo es idéntico carácter a carácter al que generaban las macros.
+### Tipografía
+
+Todo el correo va en Calibri 11. La fuente se repite en cada `<td>` y `<th>`: Outlook
+usa el motor de Word, que **no hereda** la fuente desde `<table>`, así que la tabla del
+correo original salía con la tipografía por defecto. El aviso a SOAV usaba además
+`<font size='11pt'>`, que no es un tamaño válido y Outlook ignoraba; ahora lleva estilos
+en línea.
 
 ### La firma
 
-Outlook inserta su firma automática donde le parece, y con párrafos sueltos la colaba
-entre el saludo y la tabla. Para evitarlo, el cuerpo del `.eml` va dentro de un único
-`<div>` y la firma se añade al final desde la propia aplicación: en **Datos → Mi firma**
-se pega una vez (Ctrl+C en Outlook, Ctrl+V ahí) y se guarda en el navegador.
+Outlook inserta su firma automática detrás del primer bloque que encuentra, y con
+párrafos sueltos la colaba entre el saludo y la tabla. El cuerpo del `.eml` va ahora
+dentro de una única celda de tabla: al haber un solo bloque, la firma cae detrás del
+mensaje completo.
+
+Además, en **Datos → Mi firma** se puede pegar la firma propia una vez (Ctrl+C en
+Outlook, Ctrl+V ahí); se guarda en el navegador y se añade al final de cada `.eml`,
+igual que hacía la macro con `Cuerpo & originalSignature`.
 
 - **Descargar .eml** → incluye tu firma al final. Si Outlook además mete la suya,
   desactívala para mensajes nuevos en *Archivo → Opciones → Correo → Firmas*.
@@ -60,5 +70,5 @@ pueden exportarse e importarse en JSON desde el menú **Datos**.
 
 Dos cálculos que en el libro eran valores fijos ya desfasados se recalculan aquí:
 *Objetivo anual* (suma de los doce meses) y *Consecución acumulada* (de enero al mes
-seleccionado). En TELICE se respeta el orden de la hoja — PLO, RACA, RACO —; la macro
+seleccionado). En TELICE el orden es PLO, RACA, RACO; la macro
 original intercambiaba las etiquetas de las dos últimas filas.
