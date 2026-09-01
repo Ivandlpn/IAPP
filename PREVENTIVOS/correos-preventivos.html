@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Correos Mensuales · Solicitud Nº Preventivos</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23002060'/%3E%3Crect x='6' y='9.5' width='20' height='14' rx='2.2' fill='%23ffffff'/%3E%3Cpath d='M8 12.2 16 18l8-5.8' fill='none' stroke='%230070C0' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <style>
 /* ============================================================================
    Réplica de Solicitud_Preventivos__Correos_Mensuales_2026.xlsm
@@ -45,32 +46,82 @@ h1,h2,h3{margin:0; font-weight:650; letter-spacing:-.01em}
 .num{font-variant-numeric:tabular-nums}
 
 /* ---------- Cabecera ---------- */
-/* Todas las bandas son de ancho completo, pero su contenido ocupa el 85 %
-   centrado: 7,5 % de margen a cada lado. */
 .appbar{
-  background:linear-gradient(105deg,var(--navy) 0%,var(--navy-700) 100%);
-  color:#fff; padding:16px 7.5%; display:flex; align-items:center; gap:16px; flex-wrap:wrap;
+  position:relative; color:#fff; padding:20px 7.5% 22px;
+  display:flex; align-items:center; gap:18px; flex-wrap:wrap;
+  background:
+    radial-gradient(900px 260px at 8% -60%, rgba(0,112,192,.55), transparent 72%),
+    radial-gradient(700px 240px at 92% 160%, rgba(0,112,192,.26), transparent 70%),
+    linear-gradient(100deg,#001640 0%,#002060 46%,#0a2f7a 100%);
+}
+/* Filete corporativo: verde de Adif, azul de cabeceras y rojo del logotipo. */
+.appbar::after{
+  content:""; position:absolute; left:0; right:0; bottom:0; height:3px;
+  background:linear-gradient(90deg,#006C30 0%,#0070C0 42%,#1C387E 72%,#C8102E 100%);
 }
 .appbar .mark{
-  width:40px; height:40px; border-radius:11px; display:grid; place-items:center;
-  background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.22);
-  font-size:19px; flex:0 0 auto;
+  width:46px; height:46px; border-radius:13px; display:grid; place-items:center; flex:0 0 auto;
+  background:rgba(255,255,255,.10); border:1px solid rgba(255,255,255,.24);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.18);
 }
-.appbar h1{font-size:19px; line-height:1.2}
-.appbar .claim{margin:2px 0 0; font-size:12.5px; color:#b9c8e6; letter-spacing:.02em}
+.appbar .titulos{min-width:0}
+.appbar .eyebrow{
+  display:block; font-size:10.5px; font-weight:700; letter-spacing:.16em;
+  text-transform:uppercase; color:#8fabe0; margin-bottom:3px;
+}
+.appbar h1{font-size:21px; line-height:1.2}
+.appbar .claim{margin:3px 0 0; font-size:12.5px; color:#b9c8e6}
 .appbar .org{
-  margin-left:auto; display:flex; align-items:center; gap:14px;
-  background:#fff; border-radius:9px; padding:8px 14px;
+  margin-left:auto; display:flex; align-items:center; gap:16px;
+  background:#fff; border-radius:10px; padding:9px 16px;
+  box-shadow:0 2px 10px rgba(0,10,40,.28);
 }
 /* Los dos logotipos, recortados de su margen blanco, ocupan la misma caja. */
 .appbar .org img{width:92px; height:26px; object-fit:contain; display:block}
+.appbar .org::before{content:""; order:1; width:1px; height:24px; background:var(--line)}
+.appbar .org #logoIneco{order:2}
 
-/* ---------- Barra de control ---------- */
+/* ---------- Barra de selección del periodo ---------- */
 .toolbar{
   background:var(--panel); border-bottom:1px solid var(--line);
-  padding:12px 7.5%; display:flex; align-items:flex-end; gap:16px; flex-wrap:wrap;
+  padding:13px 7.5%; display:flex; align-items:center; gap:20px; flex-wrap:wrap;
   position:sticky; top:0; z-index:40; box-shadow:var(--sh-1);
 }
+.toolbar .et{
+  display:block; font-size:10px; font-weight:700; color:var(--muted);
+  text-transform:uppercase; letter-spacing:.13em; margin-bottom:5px;
+}
+.periodo .grupo{
+  display:flex; align-items:stretch; border:1px solid var(--line-2);
+  border-radius:10px; background:#fff; overflow:hidden;
+  transition:border-color .12s, box-shadow .12s;
+}
+.periodo .grupo:focus-within{border-color:var(--blue); box-shadow:0 0 0 3px rgba(0,112,192,.16)}
+.periodo .paso{
+  border:none; background:#f6f8fc; color:var(--blue-600); cursor:pointer;
+  width:34px; font-size:19px; line-height:1; font-weight:700;
+}
+.periodo .paso:hover{background:var(--blue-050); color:var(--navy)}
+.periodo .paso:active{background:#dceaf7}
+.periodo .div{width:1px; background:var(--line); margin:7px 0}
+.periodo select,.periodo input{
+  border:none; background:transparent; padding:9px 12px;
+  font-size:15px; font-weight:650; color:var(--navy);
+}
+.periodo select{min-width:126px; cursor:pointer}
+.periodo input{width:76px; text-align:center; font-variant-numeric:tabular-nums}
+.periodo select:focus,.periodo input:focus{outline:none}
+.periodo input::-webkit-outer-spin-button,
+.periodo input::-webkit-inner-spin-button{-webkit-appearance:none; margin:0}
+.periodo input[type=number]{-moz-appearance:textfield}
+.resumen{border-left:1px solid var(--line); padding-left:20px}
+.resumen strong{display:block; font-size:16px; font-weight:700; color:var(--navy)}
+.toolbar .hint{
+  flex:1 1 300px; min-width:220px; margin:0;
+  font-size:12.5px; color:var(--muted); line-height:1.5;
+}
+
+/* Campos sueltos (selector de mes del aviso a SOAV) */
 .field{display:flex; flex-direction:column; gap:4px}
 .field > label{
   font-size:10.5px; font-weight:700; color:var(--muted);
@@ -83,11 +134,6 @@ h1,h2,h3{margin:0; font-weight:650; letter-spacing:-.01em}
 }
 .control:hover{border-color:#a9bad4}
 .control:focus{outline:none; border-color:var(--blue); box-shadow:0 0 0 3px rgba(0,112,192,.16)}
-.toolbar .hint{
-  flex:1 1 300px; min-width:220px; margin:0 0 2px;
-  font-size:12.5px; color:var(--muted); border-left:2px solid var(--soft); padding-left:12px;
-}
-
 /* ---------- Botones ---------- */
 .btn{
   cursor:pointer; border-radius:var(--r-sm); font-size:13.5px; font-weight:650;
@@ -117,15 +163,21 @@ h1,h2,h3{margin:0; font-weight:650; letter-spacing:-.01em}
 /* ---------- Pestañas ---------- */
 .tabs{
   background:var(--panel); border-bottom:1px solid var(--line);
-  padding:0 7.5% 10px; display:flex; gap:4px; overflow-x:auto;
+  padding:0 7.5% 12px; display:flex; overflow-x:auto;
+}
+.tabs-grupo{
+  display:inline-flex; gap:2px; background:#eef2f8; border:1px solid var(--line);
+  border-radius:999px; padding:4px;
 }
 .tab{
-  border:1px solid transparent; background:none; cursor:pointer; white-space:nowrap;
-  padding:7px 15px; font-size:13px; font-weight:650; color:var(--muted);
-  border-radius:999px; letter-spacing:.02em;
+  border:none; background:none; cursor:pointer; white-space:nowrap;
+  padding:7px 16px; font-size:12.5px; font-weight:700; color:var(--muted);
+  border-radius:999px; letter-spacing:.05em; display:inline-flex; align-items:center; gap:7px;
+  transition:background .12s, color .12s;
 }
-.tab:hover{color:var(--navy); background:var(--blue-050)}
-.tab[aria-selected="true"]{background:var(--navy); color:#fff}
+.tab .punto{width:7px; height:7px; border-radius:50%; flex:0 0 auto}
+.tab:hover{color:var(--navy); background:#e3eaf5}
+.tab[aria-selected="true"]{background:var(--navy); color:#fff; box-shadow:0 1px 3px rgba(0,32,96,.3)}
 
 /* ---------- Estructura ---------- */
 .wrap{width:100%; padding:26px 7.5% 60px}
@@ -350,8 +402,13 @@ table.sheet tr.grupo-total td.subsis,table.sheet tr.grupo-total td.act{backgroun
 }
 .pie-pagina{
   padding:0 7.5% 34px;
-  font-size:11.5px; color:#8291a8; display:flex; gap:8px; flex-wrap:wrap;
+  font-size:11.5px; color:#8291a8; display:flex; gap:14px; align-items:center; flex-wrap:wrap;
 }
+.enlace-discreto{
+  border:none; background:none; padding:0; cursor:pointer;
+  font-size:11.5px; color:#8291a8; text-decoration:underline; text-underline-offset:2px;
+}
+.enlace-discreto:hover{color:var(--warn)}
 @media (max-width:900px){
   .appbar,.toolbar,.tabs,.wrap,.pie-pagina{padding-left:3.5%; padding-right:3.5%}
 }
@@ -367,10 +424,17 @@ table.sheet tr.grupo-total td.subsis,table.sheet tr.grupo-total td.act{backgroun
 <body>
 
 <header class="appbar">
-  <span class="mark" aria-hidden="true">✉</span>
-  <div>
+  <span class="mark" aria-hidden="true">
+    <svg viewBox="0 0 32 32" width="24" height="24">
+      <rect x="3" y="7" width="26" height="18" rx="3" fill="none" stroke="currentColor" stroke-width="2.2"/>
+      <path d="M5 9.5 16 18 27 9.5" fill="none" stroke="currentColor" stroke-width="2.2"
+            stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </span>
+  <div class="titulos">
+    <span class="eyebrow">Eje Este de Alta Velocidad · Telecomunicaciones</span>
     <h1>Correos mensuales de preventivos</h1>
-    <p class="claim">Solicitud del número de preventivos realizados · Eje Este de Alta Velocidad</p>
+    <p class="claim">Solicitud del número de preventivos realizados a los mantenedores</p>
   </div>
   <div class="org">
     <img id="logoAdif" alt="Adif">
@@ -379,21 +443,29 @@ table.sheet tr.grupo-total td.subsis,table.sheet tr.grupo-total td.act{backgroun
 </header>
 
 <div class="toolbar">
-  <div class="field">
-    <label for="mes">Mes</label>
-    <select id="mes" class="control"></select>
+  <div class="periodo">
+    <span class="et">Periodo de certificación</span>
+    <div class="grupo">
+      <button class="paso" id="mesAnt" type="button" aria-label="Mes anterior" title="Mes anterior">‹</button>
+      <select id="mes" aria-label="Mes"></select>
+      <span class="div"></span>
+      <input id="ano" type="number" min="2000" max="2100" step="1" value="2026" aria-label="Año">
+      <button class="paso" id="mesSig" type="button" aria-label="Mes siguiente" title="Mes siguiente">›</button>
+    </div>
   </div>
-  <div class="field">
-    <label for="ano">Año</label>
-    <input id="ano" class="control" type="number" min="2000" max="2100" step="1" value="2026" style="min-width:96px">
+  <div class="resumen">
+    <span class="et">Mes seleccionado</span>
+    <strong id="periodoEco">—</strong>
   </div>
   <p class="hint">
-    Cada botón <b>Preparar correo</b> compone el mensaje de solicitud con los preventivos
-    previstos del mes: revísalo, cópialo o descárgalo como <b>.eml</b> para abrirlo en Outlook.
+    Cada botón <b>Preparar correo</b> compone el mensaje con los preventivos previstos
+    del mes y lo descarga como <b>.eml</b> para abrirlo en Outlook.
   </p>
 </div>
 
-<nav class="tabs" id="tabs" role="tablist" aria-label="Hojas del libro"></nav>
+<nav class="tabs" aria-label="Hojas del libro">
+  <div class="tabs-grupo" id="tabs" role="tablist"></div>
+</nav>
 
 <main class="wrap">
   <!-- ================= HOJA CORREOS ================= -->
@@ -430,6 +502,7 @@ table.sheet tr.grupo-total td.subsis,table.sheet tr.grupo-total td.act{backgroun
 
 <footer class="pie-pagina">
   <span>Los datos se guardan en este navegador.</span>
+  <button class="enlace-discreto" id="btnRestablecer" type="button">Restablecer los valores del libro</button>
 </footer>
 
 <script>
@@ -938,12 +1011,15 @@ function aviso(txt){
 function pintarTabs(){
   const tabs = $("#tabs");
   tabs.innerHTML = "";
-  const hojas = ["CORREOS", ...CONTRATOS.map(c => c.id)];
+  const hojas = ["CORREOS", ...[...CONTRATOS].sort((a,b) => a.orden - b.orden).map(c => c.id)];
   for(const h of hojas){
+    const c = contrato(h);
     tabs.appendChild(el("button", {
       class:"tab", role:"tab", "aria-selected": String(estado.hoja === h),
       onclick: () => { estado.hoja = h; pintarTabs(); mostrarVista(); }
-    }, h));
+    },
+      c ? el("span", {class:"punto", style:"background:" + c.color}) : null,
+      h));
   }
 }
 
@@ -1309,12 +1385,31 @@ function editarDestinatarios(correo, campo){
   area.focus();
 }
 
+/** Devuelve las hojas a los valores que trae el libro original. */
+function restablecer(){
+  if(!confirm("Se recuperarán los valores del Excel original y se perderán los cambios " +
+              "guardados en las hojas. ¿Continuar?")) return;
+  estado.datos = datosPorDefecto();
+  guardar(); pintarTodo();
+  aviso("Valores del libro restablecidos");
+}
+
 /* ============================================================================
    11. ARRANQUE
    ========================================================================== */
+/** Mueve el periodo n meses, con salto de año. */
+function moverMes(n){
+  const d = new Date(estado.ano, estado.mes + n, 1);
+  estado.mes = d.getMonth();
+  estado.ano = d.getFullYear();
+  guardar();
+  pintarTodo();
+}
+
 function pintarTodo(){
   $("#mes").value = String(estado.mes);
   $("#ano").value = String(estado.ano);
+  $("#periodoEco").textContent = MESES[estado.mes].toUpperCase() + " " + estado.ano;
   $("#logoAdif").src = LOGOS.adif;
   $("#logoIneco").src = LOGOS.ineco;
   pintarTabs();
@@ -1329,17 +1424,14 @@ function iniciar(){
   const selMes = $("#mes");
   MESES.forEach((m,i) => selMes.appendChild(el("option", {value:String(i)}, m)));
   selMes.addEventListener("change", () => {
-    estado.mes = Number(selMes.value); guardar(); pintarTarjetas();
-    if(estado.hoja !== "CORREOS") pintarHoja(estado.hoja);
+    estado.mes = Number(selMes.value); guardar(); pintarTodo();
   });
 
   const inpAno = $("#ano");
   inpAno.addEventListener("change", () => {
     const n = Number(inpAno.value);
     estado.ano = Number.isFinite(n) && n > 1999 ? n : new Date().getFullYear();
-    inpAno.value = String(estado.ano);
-    guardar();
-    if(estado.hoja !== "CORREOS") pintarHoja(estado.hoja);
+    guardar(); pintarTodo();
   });
 
   crearVistasHojas();
@@ -1352,7 +1444,11 @@ function iniciar(){
     abrirCola([correoSOAV(mes, ano)]);
   });
 
+  $("#mesAnt").addEventListener("click", () => moverMes(-1));
+  $("#mesSig").addEventListener("click", () => moverMes(1));
+
   $("#btnAbrirWebs").addEventListener("click", abrirWebs);
+  $("#btnRestablecer").addEventListener("click", restablecer);
 
   pintarTodo();
 }
