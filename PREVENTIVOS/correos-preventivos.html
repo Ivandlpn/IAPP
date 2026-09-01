@@ -501,7 +501,7 @@ table.sheet tr.grupo-total td.subsis,table.sheet tr.grupo-total td.act{backgroun
 
 <div class="toolbar">
   <div class="periodo">
-    <span class="et">Periodo de certificación</span>
+    <span class="et">Periodo de supervisión</span>
     <div class="grupo">
       <button class="paso" id="mesAnt" type="button" aria-label="Mes anterior" title="Mes anterior">‹</button>
       <select id="mes" aria-label="Mes"></select>
@@ -1230,7 +1230,7 @@ function pintarHoja(id){
     el("label", {class:"check"},
       el("input", {type:"checkbox", ...(estado.verVacias ? {checked:"checked"} : {}),
         onchange:(e) => { estado.verVacias = e.target.checked; guardar(); pintarHoja(id); }}),
-      "Mostrar filas sin subsistema"),
+      "Mostrar subsistemas sin preventivos"),
     el("span", {class:"espacio"}),
     el("button", {class:"btn btn-sec", onclick:() => { copiarRealizadasDesdeCorreo(id); }},
       "Realizadas = Programadas"),
@@ -1272,7 +1272,11 @@ function ajustarScroll(wrap){
 
 function tablaHoja(c){
   const id = c.id;
-  const filasVisibles = c.filas.filter(f => estado.verVacias || f.label);
+  // Se ocultan los subsistemas que el contrato no programa: sin nombre o con
+  // cero preventivos previstos en los doce meses. El total no cambia, porque
+  // esas filas suman cero.
+  const filasVisibles = c.filas.filter(f =>
+    estado.verVacias || (f.label && anual(c.id, f.fila, "prog") > 0));
 
   const thead = el("thead", null,
     el("tr", null,
