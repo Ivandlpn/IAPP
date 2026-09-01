@@ -32,6 +32,26 @@ Desde el navegador no se puede automatizar Outlook, así que cada correo ofrece:
 
 El HTML del cuerpo es idéntico carácter a carácter al que generaban las macros.
 
+### La firma
+
+Outlook inserta su firma automática donde le parece, y con párrafos sueltos la colaba
+entre el saludo y la tabla. Para evitarlo, el cuerpo del `.eml` va dentro de un único
+`<div>` y la firma se añade al final desde la propia aplicación: en **Datos → Mi firma**
+se pega una vez (Ctrl+C en Outlook, Ctrl+V ahí) y se guarda en el navegador.
+
+- **Descargar .eml** → incluye tu firma al final. Si Outlook además mete la suya,
+  desactívala para mensajes nuevos en *Archivo → Opciones → Correo → Firmas*.
+- **Copiar cuerpo** → copia sin firma, para pegarlo arriba del todo en un mensaje
+  nuevo que ya lleve la tuya.
+
+## Exportar a Excel
+
+El botón **⤓ Excel** de la barra superior (también en cada hoja y en el menú Datos)
+descarga un `.xlsx` con las cinco hojas: un resumen en CORREOS y las cuatro hojas de
+contrato, con las filas y columnas en la misma posición que en el libro original
+(C7 y meses en G:R para MAVENTS, SALAVE y TELICE; A7 y meses en E:P para CHATO).
+El libro se genera dentro del navegador, sin librerías externas ni conexión.
+
 ## Datos
 
 Las cuatro hojas de contrato están replicadas con sus filas *Programadas*, *Realizadas*
