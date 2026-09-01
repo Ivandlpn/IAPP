@@ -1,0 +1,1285 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Correos Mensuales · Solicitud Nº Preventivos</title>
+<style>
+/* ============================================================================
+   Réplica de Solicitud_Preventivos__Correos_Mensuales_2026.xlsm
+   Paleta tomada del libro Excel y de los correos generados por las macros:
+     #002060  azul corporativo (título / texto de los correos)
+     #0070C0  azul cabeceras de tabla
+     #B4C6E7  azul suave fila TOTAL
+   ========================================================================== */
+:root{
+  --ink:#002060;
+  --accent:#0070C0;
+  --accent-dark:#005596;
+  --soft:#B4C6E7;
+  --bg:#eef1f6;
+  --panel:#ffffff;
+  --line:#c9d3e4;
+  --line-soft:#e3e9f3;
+  --muted:#5a6b86;
+  --ok:#00B050;
+  --warn:#c0504d;
+  --radius:10px;
+  --shadow:0 1px 2px rgba(0,32,96,.08), 0 8px 24px rgba(0,32,96,.07);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:Calibri,"Segoe UI",Carlito,system-ui,-apple-system,sans-serif;
+  background:var(--bg); color:#1b2a44; font-size:15px; line-height:1.45;
+}
+button,input,select,textarea{font:inherit;color:inherit}
+a{color:var(--accent-dark)}
+
+/* ---------- Barra de título (celda A1:P2 del libro) ---------- */
+.titlebar{
+  background:var(--ink); color:#fff; padding:14px 22px;
+  display:flex; align-items:center; gap:16px; flex-wrap:wrap;
+}
+.titlebar h1{
+  margin:0; font-size:23px; font-weight:700; letter-spacing:.3px; flex:1 1 auto;
+}
+.titlebar .sub{font-size:12.5px; opacity:.72; letter-spacing:.4px; text-transform:uppercase}
+
+/* ---------- Barra de control (fila 3-4: mes / año) ---------- */
+.controlbar{
+  background:var(--panel); border-bottom:1px solid var(--line);
+  padding:12px 22px; display:flex; align-items:flex-end; gap:18px; flex-wrap:wrap;
+  position:sticky; top:0; z-index:40;
+}
+.field{display:flex; flex-direction:column; gap:3px}
+.field label{font-size:11.5px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.5px}
+.field select,.field input{
+  border:1px solid var(--line); border-radius:6px; padding:7px 10px; background:#fff;
+  font-size:15px; font-weight:700; color:var(--ink); min-width:130px;
+}
+.field select:focus,.field input:focus{outline:2px solid var(--accent); outline-offset:1px}
+.hint{
+  flex:1 1 320px; min-width:240px; font-size:12.5px; color:var(--muted);
+  border-left:3px solid var(--soft); padding-left:10px;
+}
+
+/* ---------- Pestañas (hojas del libro) ---------- */
+.tabs{display:flex; gap:2px; padding:0 22px; background:var(--panel); border-bottom:1px solid var(--line); overflow-x:auto}
+.tab{
+  border:1px solid transparent; border-bottom:none; background:none; cursor:pointer;
+  padding:9px 16px; font-size:13.5px; font-weight:700; color:var(--muted);
+  border-radius:8px 8px 0 0; white-space:nowrap; position:relative; top:1px;
+}
+.tab:hover{color:var(--ink); background:#f4f7fc}
+.tab[aria-selected="true"]{background:var(--bg); color:var(--ink); border-color:var(--line); border-bottom:1px solid var(--bg)}
+
+/* ---------- Contenedor ---------- */
+.wrap{max-width:1180px; margin:0 auto; padding:22px}
+.view[hidden]{display:none}
+
+/* ---------- Tarjetas de contrato (botones E-mail de la hoja CORREOS) ---------- */
+.grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(255px,1fr)); gap:16px}
+.card{
+  background:var(--panel); border:1px solid var(--line); border-radius:var(--radius);
+  box-shadow:var(--shadow); padding:16px; display:flex; flex-direction:column; gap:12px;
+}
+.card .logo{height:56px; display:flex; align-items:center; justify-content:center}
+.card .logo img{max-height:56px; max-width:100%}
+.card .logo .txtlogo{
+  font-size:19px; font-weight:800; color:var(--ink); letter-spacing:.5px; text-align:center;
+}
+.card h3{margin:0; font-size:16px; color:var(--ink); text-align:center}
+.card .meta{font-size:11.5px; color:var(--muted); text-align:center; line-height:1.35}
+.card .meta b{color:#33445f}
+.card .prev{
+  background:#f7f9fd; border:1px solid var(--line-soft); border-radius:8px; padding:8px 10px;
+  font-size:12.5px; color:var(--muted); display:flex; justify-content:space-between; align-items:baseline;
+}
+.card .prev strong{font-size:20px; color:var(--ink)}
+.card .actions{display:flex; gap:8px; margin-top:auto}
+
+/* ---------- Botón "E-mail" (réplica de la imagen del libro) ---------- */
+.btn-mail{
+  flex:1 1 auto; cursor:pointer; border:none; border-radius:999px; color:#fff;
+  font-size:15px; font-weight:700; letter-spacing:.4px; padding:10px 16px 10px 12px;
+  background:linear-gradient(180deg,#3a9be0 0%,#0f72c4 48%,#0a5ea6 52%,#0b6cb8 100%);
+  box-shadow:0 2px 4px rgba(0,32,96,.28), inset 0 1px 0 rgba(255,255,255,.45);
+  display:flex; align-items:center; justify-content:center; gap:9px;
+}
+.btn-mail:hover{filter:brightness(1.08)}
+.btn-mail:active{transform:translateY(1px)}
+.btn-mail .env{
+  width:24px; height:24px; border-radius:50%; background:rgba(255,255,255,.16);
+  border:1px solid rgba(255,255,255,.5); display:grid; place-items:center; font-size:12px;
+}
+.btn-mail.cyan{background:linear-gradient(180deg,#7fe6ff 0%,#22c8f5 48%,#12b6e6 52%,#3ad2fb 100%)}
+.btn-ghost{
+  cursor:pointer; border:1px solid var(--line); background:#fff; color:var(--ink);
+  border-radius:8px; padding:9px 12px; font-size:13px; font-weight:700;
+}
+.btn-ghost:hover{background:#f2f6fc; border-color:var(--accent)}
+
+/* ---------- Botones anchos (TODOS LOS CONTRATOS / INFORMAR A SOAV) ---------- */
+.wide-row{display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:16px; margin-top:20px}
+.wide{
+  background:var(--panel); border:1px solid var(--line); border-radius:var(--radius);
+  box-shadow:var(--shadow); padding:16px; display:flex; flex-direction:column; gap:12px;
+}
+.wide .cap{font-size:17px; font-weight:800; color:var(--ink); letter-spacing:.3px}
+.wide .btn-mail{flex:0 0 auto; align-self:flex-start; min-width:240px; margin-top:auto}
+.wide .cap.green{color:#1d7a4c}
+.wide p{margin:0; font-size:12.5px; color:var(--muted)}
+.linkbar{
+  margin-top:20px; background:#e8f5ec; border:1px solid #b7ddc6; border-radius:var(--radius);
+  padding:12px 16px; display:flex; align-items:center; gap:12px; flex-wrap:wrap; font-weight:700; color:#1d7a4c;
+}
+.linkbar a{font-size:22px; text-decoration:none}
+.linkbar .btn-ghost{margin-left:auto; font-weight:700}
+
+/* ---------- Hojas de contrato ---------- */
+.sheet-head{
+  background:var(--panel); border:1px solid var(--line); border-radius:var(--radius);
+  box-shadow:var(--shadow); padding:16px; margin-bottom:16px;
+}
+.sheet-head .contrato{font-size:12.5px; color:var(--muted); line-height:1.4; margin:0 0 10px}
+.sheet-head .strip{display:flex; gap:20px; flex-wrap:wrap; font-size:13px}
+.sheet-head .strip div b{color:var(--muted); font-weight:700; text-transform:uppercase; font-size:11px; letter-spacing:.4px; display:block}
+.sheet-head .strip div span{color:var(--ink); font-weight:700}
+.sheet-title{
+  background:var(--accent); color:#fff; text-align:center; font-weight:700; letter-spacing:.5px;
+  padding:7px; border-radius:8px 8px 0 0; font-size:13.5px;
+}
+.tablewrap{overflow-x:auto; background:var(--panel); border:1px solid var(--line); border-top:none; border-radius:0 0 var(--radius) var(--radius); box-shadow:var(--shadow)}
+table.sheet{border-collapse:collapse; width:100%; font-size:13px}
+table.sheet th,table.sheet td{border:1px solid var(--line); padding:5px 7px; text-align:center; white-space:nowrap}
+table.sheet thead th{background:#dbe5f4; color:var(--ink); font-weight:700; font-size:11.5px; text-transform:uppercase; letter-spacing:.3px}
+table.sheet thead th.mescol{min-width:64px}
+table.sheet thead th.selmes{background:var(--accent); color:#fff}
+table.sheet td.subsis,table.sheet th.subsis{text-align:left; font-weight:700; color:var(--ink); min-width:230px; white-space:normal}
+table.sheet td.act{text-align:left; color:var(--muted); font-size:12px; min-width:150px}
+table.sheet tr.r-prog td{background:#fbfcfe}
+table.sheet tr.r-real td{background:#fff}
+table.sheet tr.r-pct td{background:#f5f7fb; color:var(--muted); font-size:12px}
+table.sheet tr.grupo-total td{background:var(--soft); font-weight:700; color:var(--ink)}
+table.sheet td.selmes{box-shadow:inset 0 0 0 2px var(--accent)}
+/* Columnas SUBSISTEMA y Actuaciones fijas al desplazar la tabla en horizontal */
+table.sheet th.subsis,table.sheet td.subsis{position:sticky; left:0; z-index:3; width:232px; min-width:232px; background:#fff}
+table.sheet th.actcol,table.sheet td.act{position:sticky; left:232px; z-index:2; width:168px; min-width:168px; box-shadow:1px 0 0 var(--line)}
+table.sheet thead th.subsis,table.sheet thead th.actcol{z-index:5; background:#dbe5f4}
+table.sheet thead th.actcol{text-align:center}
+table.sheet tr.r-prog td.act{background:#fbfcfe}
+table.sheet tr.r-real td.act{background:#fff}
+table.sheet tr.r-pct td.act{background:#f5f7fb}
+table.sheet tr.grupo-total td.subsis,table.sheet tr.grupo-total td.act{background:var(--soft)}
+table.sheet input{
+  width:60px; border:1px solid transparent; border-radius:4px; padding:3px 4px; text-align:center;
+  background:transparent; font-size:13px; font-weight:600; color:var(--ink);
+}
+table.sheet input:hover{border-color:var(--line)}
+table.sheet input:focus{outline:none; border-color:var(--accent); background:#fff; box-shadow:0 0 0 2px rgba(0,112,192,.18)}
+table.sheet input:read-only{color:var(--muted); font-weight:700}
+.pct-ok{color:#1d7a4c; font-weight:700}
+.pct-bad{color:var(--warn); font-weight:700}
+.sheet-tools{display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin:14px 0 4px}
+.sheet-tools .spacer{flex:1}
+.obs{margin-top:16px}
+.obs label{font-size:11.5px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.5px}
+.obs textarea{
+  width:100%; min-height:80px; border:1px solid var(--line); border-radius:8px; padding:10px;
+  background:var(--panel); resize:vertical; font-size:13.5px;
+}
+.firmas{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:12px; margin-top:16px}
+.firma{
+  background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:10px 12px;
+  font-size:11.5px; color:var(--muted); white-space:pre-line; min-height:92px;
+}
+.firma b{display:block; color:var(--ink); font-size:12.5px; margin-bottom:4px}
+
+/* ---------- Modal de correo ---------- */
+.modal-back{
+  position:fixed; inset:0; background:rgba(9,22,45,.55); display:grid; place-items:center;
+  padding:20px; z-index:100;
+}
+.modal{
+  background:var(--panel); border-radius:12px; box-shadow:0 24px 60px rgba(0,20,60,.35);
+  width:min(860px,100%); max-height:92vh; display:flex; flex-direction:column; overflow:hidden;
+}
+.modal header{background:var(--ink); color:#fff; padding:12px 18px; display:flex; align-items:center; gap:12px}
+.modal header h2{margin:0; font-size:16px; flex:1}
+.modal header .close{background:none; border:none; color:#fff; font-size:22px; cursor:pointer; line-height:1; padding:0 4px}
+.modal .body{overflow:auto; padding:16px 18px}
+.hdrs{display:grid; grid-template-columns:auto 1fr; gap:6px 12px; font-size:13px; margin-bottom:14px}
+.hdrs .k{font-weight:700; color:var(--muted); text-transform:uppercase; font-size:11px; letter-spacing:.4px; padding-top:3px}
+.hdrs .v{color:#22334f; word-break:break-word}
+.hdrs .v.subject{font-weight:700; color:var(--ink); font-size:14.5px}
+.mailprev{
+  border:1px solid var(--line); border-radius:8px; padding:14px; background:#fff; overflow-x:auto;
+}
+.mailprev .sigslot{margin-top:14px; padding-top:10px; border-top:1px dashed var(--line); font-size:12px; color:var(--muted); font-style:italic}
+.modal footer{
+  border-top:1px solid var(--line); padding:12px 18px; display:flex; gap:8px; flex-wrap:wrap;
+  background:#f7f9fd;
+}
+.modal footer .spacer{flex:1}
+.btn-pri{
+  cursor:pointer; border:none; border-radius:8px; padding:9px 16px; font-size:13.5px; font-weight:700;
+  background:var(--accent); color:#fff;
+}
+.btn-pri:hover{background:var(--accent-dark)}
+.queue{
+  display:flex; align-items:center; gap:10px; font-size:12.5px; color:var(--muted); font-weight:700;
+}
+.queue .pill{background:var(--soft); color:var(--ink); border-radius:999px; padding:2px 10px}
+
+/* ---------- Avisos ---------- */
+.toast{
+  position:fixed; left:50%; bottom:24px; transform:translateX(-50%);
+  background:var(--ink); color:#fff; padding:10px 18px; border-radius:999px; font-size:13.5px;
+  box-shadow:0 8px 24px rgba(0,20,60,.3); z-index:200;
+}
+.note{
+  background:#fff8e6; border:1px solid #f0d89a; color:#6b5312; border-radius:8px;
+  padding:10px 14px; font-size:12.5px; margin-top:18px;
+}
+.note b{color:#4a3a08}
+@media print{.controlbar,.tabs,.sheet-tools,.actions,.wide-row,.linkbar{display:none !important}}
+</style>
+</head>
+<body>
+
+<div class="titlebar">
+  <h1>CORREOS MENSUALES · SOLICITUD NÚMERO PREVENTIVOS</h1>
+  <div class="sub">Eje Este de Alta Velocidad · Teleco</div>
+</div>
+
+<div class="controlbar">
+  <div class="field">
+    <label for="mes">Seleccionar mes</label>
+    <select id="mes"></select>
+  </div>
+  <div class="field">
+    <label for="ano">Año</label>
+    <input id="ano" type="number" min="2000" max="2100" step="1" value="2026">
+  </div>
+  <div class="hint">
+    Al pulsar el botón <b>E-mail</b> se prepara el mensaje con la solicitud del número de
+    preventivos realizados: revisa, copia el cuerpo o descarga el <b>.eml</b> para abrirlo en Outlook.
+  </div>
+  <button class="btn-ghost" id="btnDatos" title="Exportar / importar / restablecer los datos">Datos ▾</button>
+</div>
+
+<div class="tabs" id="tabs" role="tablist"></div>
+
+<div class="wrap">
+  <!-- ================= HOJA CORREOS ================= -->
+  <section class="view" id="view-CORREOS" role="tabpanel">
+    <div class="grid" id="cards"></div>
+
+    <div class="wide-row">
+      <div class="wide">
+        <div class="cap">TODOS LOS CONTRATOS EJE ESTE</div>
+        <p>Genera en secuencia los cuatro correos de solicitud (CHATO → SALAVE → TELICE → MAVENTS),
+           igual que la macro <code>CorreoLAVESTE</code>.</p>
+        <button class="btn-mail" id="btnTodos"><span class="env">✉</span> E-mail · los 4 contratos</button>
+      </div>
+      <div class="wide">
+        <div class="cap green">INFORMAR A SOAV</div>
+        <p>Aviso a la Subdirección de Operaciones AV de que los Excel del mes ya están subidos a
+           OneDrive (macro <code>CorreoSOAV</code>).</p>
+        <div class="field">
+          <label for="soavMes">Mes del aviso</label>
+          <select id="soavMes"></select>
+        </div>
+        <button class="btn-mail cyan" id="btnSOAV"><span class="env">✉</span> E-mail · SOAV</button>
+      </div>
+    </div>
+
+    <div class="linkbar">
+      <span>Antes, subir archivos EXCEL a</span>
+      <a id="lnkOneDrive" href="#" target="_blank" rel="noopener" title="Carpeta OneDrive de ADIF">📂</a>
+      <button class="btn-ghost" id="btnAbrirWebs" title="Macro AbrirWebsEnNuevasVentanas">
+        Abrir carpetas SharePoint (INECO + ADIF)
+      </button>
+    </div>
+
+    <div class="note" id="notas"></div>
+  </section>
+
+  <!-- Las hojas de contrato se generan por JS -->
+  <div id="sheetViews"></div>
+</div>
+
+<script>
+"use strict";
+/* ============================================================================
+   1. DATOS DEL LIBRO
+   Valores "Programadas" tal cual figuran en las hojas MAVENTS, SALAVE, TELICE
+   y CHATO del archivo Solicitud_Preventivos__Correos_Mensuales_2026.xlsm.
+   null = celda vacía en el Excel (se suma como 0, se muestra en blanco).
+   ========================================================================== */
+
+const MESES = ["Enero","Febrero","Marzo","Abril","Mayo","Junio",
+               "Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+const MESES_ABR = ["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
+
+/* Logos incrustados (extraídos del propio libro) */
+const LOGOS = {"mavents": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUAAAABPCAMAAACtb+z5AAABgFBMVEWpm3vl1reuqJuau+fMtJd+pLpikOSGe6S9wLu64fnd4N79/v4eSHsDAgIhSHsTQo9Vi9DW5/AYFBFoh7Hm6OsTOW0iSoJUkdMpF1hOSkkvGmPO2OhXVFK4uLfV1td3d3UrKCdpaGfIyMdahbSWqbaXl5WNp8mHmbKIh4Y4NjWnpqoUPpJ0lbWvxtczV5JtlcqzyuYiHBhiisdUeK+Cm8mqus1whJVVjOJifa/a8vpJPGqcsbmXttDCvc+31OlveZEoIRxDPDlZUXhVkeJKZpBceJXLxLpSSXGjop5lWoWknbfDvbbk4dpDQD2Ggno0VHvMzucXCke51NsuI1Xi29IQKlE6YJuBfXmPhqZnXFVkYl2EepycxNgSGSYnBwNCXIijm5UPGEcZJDQiD1Y9YqFdT4BWfsxdkbNyaY59pM4GDSs8RE5IZaN+gHyUdVOnocDg3uQiHiA8LmFbanNii+Lk17n68dQwPl0jP2lOLSRbgp9lOTBkRCpwUjJgU350kJ3+m5kfAAAAgHRSTlP//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////xUHpOoAABNoSURBVHja7ZyJf9Nmmsfbmb1lyZb02q7QLVmOJNvxFTsJDXFMSQiEAAVaKLTTc2bbabude++df32f99X1Snolu9DPLpnhIQmOLSfWN7/nfF/5Le7/wZDhOBc62MWZ4xhPEHeF7a3/y19m6L6taYoSWLQpiqKB2abv6QZ6A7DCdM+OITl5So7peZ4PZtpaYAVr29PfACya4z8FcBXq0niJByGuQYi27537JpiOrhBAo/cuWPhuar16Cai9dwvWM+rxeWHtAZqkSJLFg1l+6BmGg9XqGVcG4PCDdsE+6NU95fRHHm/zvF//IkJIKvd0X/O858hTPF13HN3UTOeKANxpdzqdJvxLTfi05hkjoUMdCR9Cp10DUD9RLhVT2w4GQogLdQMnaAeA2s4VASg0Gg2h2RBia9QSWbU7QmqNRrNRe7hveZxvckYi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", "salave": "data:image/png;base64,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", "telice": "data:image/png;base64,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"};
+
+/* Enlaces de las macros / hipervínculos de la hoja CORREOS */
+const URL_ADIF_ESTE = "https://adif365.sharepoint.com/sites/SubdirecciondeOperacionesAV/Documentos%20compartidos/Forms/AllItems.aspx?csf=1&web=1&e=ayY3sa&CID=f844a028%2D241a%2D40d9%2Dbe7c%2D0640a22c1d34&FolderCTID=0x012000B304C0F731D3FA45A8E83C657E33AA66&id=%2Fsites%2FSubdirecciondeOperacionesAV%2FDocumentos%20compartidos%2F0%2E%20Subdirecci%C3%B3n%20de%20Operaciones%20AV%2FJSyC%2FSeguimiento%20Mantenimiento%2F03%5FTelecomunicaciones%2F01%5FESTE";
+const URL_SOAV_ONEDRIVE = "https://adif365.sharepoint.com/sites/SubdirecciondeOperacionesAV/Documentos%20compartidos/Forms/AllItems.aspx?csf=1&web=1&e=ylDkec&CID=17b81576%2D9624%2D459b%2Da137%2De854c5e6e5a1&FolderCTID=0x012000B304C0F731D3FA45A8E83C657E33AA66&id=%2Fsites%2FSubdirecciondeOperacionesAV%2FDocumentos%20compartidos%2F0%2E%20Subdirecci%C3%B3n%20de%20Operaciones%20AV%2FJSyC%2FSeguimiento%20Mantenimiento%2F03%5FTelecomunicaciones%2F01%5FESTE";
+/* URL 1 de AbrirWebsEnNuevasVentanas: se compone con MM + " " + mmm + YY */
+const URL_INECO_BASE = "https://inecospain-my.sharepoint.com/my?id=%2Fpersonal%2Fivan%5Fdelapaz%5Fineco%5Fcom%2FDocuments%2F01%20Seguimiento%20Contratos%20TELECO%2F02%2DPreventivos%20%28PAT%29%2F";
+const URL_INECO_TAIL = "&FolderCTID=0x01200062DBE0A1ADC29842A4AE8821D57D8C85";
+
+const CONTRATOS = [
+{
+  id:"MAVENTS", hoja:"MAVENTS", rotulo:"UTE MAVENTS", logo:LOGOS.mavents, orden:4,
+  expediente:"2.14/20506.0042", eje:"EJE ESTE DE ALTA VELOCIDAD", mantenedor:"UTE MAVENTS",
+  contrato:"CONTRATO MANTENIMIENTO Y RENOVACIÓN TELECOMUNICACIONES Y TELEMANDO DE ENERGIA LINEAS DE ALTA VELOCIDAD MADRID-SEVILLA-MALAGA, MADRID-VALLADOLID, MADRID-BARCELONA-FRONTERA FRANCESA Y MADRID-VALENCIA/ALBACETE",
+  bloque:"MEDICION ANUAL PROGRAMADA / REALIZADA EN MANTENIMIENTO PREVENTIVO",
+  colSubsistema:"SUBSISTEMA", colAnual:"OBJETIVO ANUAL", colAcum:"CONSECUCION ACUMULADA",
+  primeraColumnaMes:7, filaTotal:30,          // G..R (macro: Enero=7 … Diciembre=18)
+  asuntoSufijo:"MAVENTS ESTE",
+  para:["GARCIA CUENCA Alberto <alberto.garciacuenca@urbanandmainlines.com>",
+        "MORENO CORDOBA Ruben <ruben.moreno@urbanandmainlines.com>",
+        "SANCHEZ GARCIA Juan <juan.sanchezgarcia@urbanandmainlines.com>",
+        "SANCHEZ GARCIA Pablo Javier <pablo.sanchezgarcia@urbanandmainlines.com>"],
+  copia:["sgarciac@adif.es","raul.urena@ineco.com","carlos.barrera@ineco.com","ivan.delapaz@ineco.com"],
+  filas:[
+    {fila:8,  label:"TELECOMUNICACIONES FIJAS",              correo:true,  prog:[128,125,118,61,17,15,58,44,83,102,62,40]},
+    {fila:11, label:"VIDEOVIGILANCIA Y CONTROL DE ACCESOS",  correo:true,  prog:[117,114,118,41,99,0,0,99,120,144,99,0]},
+    {fila:14, label:"TELECOMUNICACIONES GSM-R",              correo:true,  prog:[35,27,37,45,41,32,23,17,22,34,26,15]},
+    {fila:17, label:"OPERADORES PUBLICOS DE TELEFONÍA MÓVIL",correo:true,  prog:[0,0,0,38,42,31,0,0,0,0,0,0]},
+    {fila:20, label:"TELEMANDO DE ENERGIA",                  correo:true,  prog:[40,42,32,18,0,0,41,25,37,33,42,31]},
+    {fila:23, label:"CORE GSM-R",                            correo:false, prog:[null,null,null,null,null,null,null,null,null,null,null,null]},
+    {fila:26, label:"CORE GESTORES",                         correo:false, prog:[null,null,null,null,null,null,null,null,null,null,null,null]}
+  ],
+  firmas:[
+    {t:"Propone: UTE MAVENTS", c:"Cargo: Representante UTE MAVENTS\nNombre:\nFecha:"},
+    {t:"Revisa: INECO", c:"Cargo: Técnico de Asistencia Técnica\nNombre y fecha:"},
+    {t:"Aprueba: ADIF", c:"Cargo: Técnico de Telecomunicaciones Línea Este\nNombre: Samuel García Chaparro\nFecha:"},
+    {t:"Conforme: ADIF", c:"Cargo: Responsable del Contrato\nNombre: Mariano García Ruíz\nFecha:"}
+  ]
+},
+{
+  id:"SALAVE", hoja:"SALAVE", rotulo:"ALBALI SEÑALIZACIÓN", logo:LOGOS.salave, orden:2,
+  expediente:"4.1/0810.1001/0-00000", eje:"EJE ESTE DE ALTA VELOCIDAD", mantenedor:"ALBALI SEÑALIZACIÓN S.A.",
+  contrato:"CPP - REDACCIÓN DE PROYECTO/S, EJECUCIÓN OBRAS Y MANTO. DE INSTALACIONES DE SEÑALIZACIÓN, TELECOMUNICACIONES FIJAS, CONTROL DE TRÁFICO CENTRALIZADO, PROTECCIÓN CIVIL Y SEGURIDAD, SISTEMAS DE PROTECCIÓN DE TREN, TELEFONÍA MÓVIL GSM-R E INFRAESTRUCTURA PARA OPERADORES PÚBLICOS DE TELEFONÍA MÓVIL DE LA LÍNEA DE ALTA VELOCIDAD MADRID-LEVANTE, TRAMO ALBACETE-ALICANTE",
+  bloque:"MEDICION ANUAL PROGRAMADA / REALIZADA EN MANTENIMIENTO PREVENTIVO",
+  colSubsistema:"SUBSISTEMA", colAnual:"OBJETIVO ANUAL", colAcum:"CONSECUCION ACUMULADA",
+  primeraColumnaMes:7, filaTotal:30,
+  asuntoSufijo:"SALAVE (TELECO)",
+  para:["Gestion Red <teleco.monforte@utesalave.com>",
+        "JUAN Francisco-Javier <francisco-javier.juan-quiles@alstomgroup.com>",
+        "VALIENTE Antonio <antonio.valiente@alstomgroup.com>",
+        "Vanesa Estevez Ruano <vestevez.albali@gmail.com>"],
+  copia:["elorente@adif.es","sgarciac@adif.es","raul.urena@ineco.com","carlos.barrera@ineco.com","ivan.delapaz@ineco.com"],
+  filas:[
+    {fila:8,  label:"TELECOMUNICACIONES FIJAS",              correo:true,  prog:[73,61,68,30,2,1,47,19,39,50,46,7]},
+    {fila:11, label:"VIDEOVIGILANCIA Y CONTROL DE ACCESOS",  correo:true,  prog:[100,84,100,45,null,4,42,16,25,55,27,7]},
+    {fila:14, label:"TELECOMUNICACIONES GSM-R",              correo:true,  prog:[30,25,27,41,52,17,24,8,16,30,24,2]},
+    {fila:17, label:"OPERADORES PUBLICOS DE TELEFONÍA MÓVIL",correo:true,  prog:[4,4,4,3,33,14,7,3,4,11,6,1]},
+    {fila:20, label:"TELEMANDO DE ENERGIA",                  correo:false, prog:[null,null,null,null,null,null,null,null,null,null,null,null]},
+    {fila:23, label:"CORE GSM-R",                            correo:false, prog:[null,null,null,null,null,null,null,null,null,null,null,null]},
+    {fila:26, label:"CORE GESTORES",                         correo:false, prog:[null,null,null,null,null,null,null,null,null,null,null,null]}
+  ],
+  firmas:[
+    {t:"Propone: ALBALI SEÑALIZACIÓN S.A.", c:"Gerente Albali Señalización"},
+    {t:"Revisa: INECO", c:"Técnico Teleco"},
+    {t:"Aprueba: ADIF", c:"Responsable de Contrato"},
+    {t:"Conforme: ADIF", c:"Jefe de Área Mtto AV Este"}
+  ]
+},
+{
+  id:"TELICE", hoja:"TELICE", rotulo:"TELICE", logo:LOGOS.telice, orden:3,
+  expediente:"2.16/20506.0075", eje:"EJE ESTE DE ALTA VELOCIDAD", mantenedor:"TELICE",
+  contrato:"CONTRATO DE SERVICIOS DE MANTENIMIENTO DE LAS INSTALACIONES DE TELEMANDO DE ENERGÍA EN LA LÍNEA DE ALTA VELOCIDAD MADRID – LEVANTE. TRAMO: ALBACETE - ALICANTE",
+  bloque:"MEDICION ANUAL PROGRAMADA / REALIZADA EN MANTENIMIENTO PREVENTIVO",
+  colSubsistema:"SUBSISTEMA", colAnual:"OBJETIVO ANUAL", colAcum:"CONSECUCION ACUMULADA",
+  primeraColumnaMes:7, filaTotal:30,
+  asuntoSufijo:"TELICE (TELECO)",
+  para:["Alejandro Moratiel Garcia <amoratiel.garcia@telice.es>",
+        "Rubén Moral Álvarez <rmoral.alvarez@telice.es>",
+        "Alejandro Rubio Vilar <arubio.vilar@telice.es>"],
+  copia:["jsenorans@adif.es","sgarciac@adif.es","raul.urena@ineco.com","carlos.barrera@ineco.com","ivan.delapaz@ineco.com"],
+  filas:[
+    {fila:8,  label:"PLO",  correo:true,  prog:[9,9,13,11,12,11,11,9,11,12,15,3]},
+    {fila:11, label:"RACA", correo:true,  prog:[27,41,26,27,41,32,23,28,45,32,30,11]},
+    {fila:14, label:"RACO", correo:true,  prog:[12,10,23,19,16,17,14,19,14,23,22,3]},
+    {fila:17, label:"",     correo:false, prog:[null,null,null,null,null,null,null,null,null,null,null,null]},
+    {fila:20, label:"",     correo:false, prog:[null,null,null,null,null,null,null,null,null,null,null,null]},
+    {fila:23, label:"",     correo:false, prog:[null,null,null,null,null,null,null,null,null,null,null,null]},
+    {fila:26, label:"",     correo:false, prog:[null,null,null,null,null,null,null,null,null,null,null,null]}
+  ],
+  firmas:[
+    {t:"Propone: TELICE", c:"Cargo: Representante TELICE\nNombre: Rubén Moral Álvarez\nFecha:"},
+    {t:"Revisa: INECO", c:"Cargo: Técnico de Asistencia Técnica\nNombre y fecha:"},
+    {t:"Aprueba: ADIF", c:"Cargo: Técnico Telecomunicaciones Línea / Director del Contrato\nNombre: Jose Manuel Señorans\nFecha:"},
+    {t:"Conforme: ADIF", c:"Jefe de Mantenimiento de Línea Alta Velocidad Este\nNombre: Enrique Aragón Roldán\nFecha:"}
+  ]
+},
+{
+  id:"CHATO", hoja:"CHATO", rotulo:"UTE MTO. CHATO", logo:null, orden:1,
+  expediente:"2.23/21506.0018", eje:"EJE ESTE DE ALTA VELOCIDAD", mantenedor:"UTE MTO. CHATO",
+  contrato:"SERVICIOS DE MANTENIMIENTO DE LAS INSTALACIONES DE SEÑALIZACIÓN, SISTEMAS DE PROTECCIÓN DEL TREN, TELECOMUNICACIONES FIJAS, Y SISTEMAS DE PROTECCIÓN Y SEGURIDAD DE LA LÍNEA DE ALTA VELOCIDAD MADRID-LEVANTE. TRAMO MADRID CHAMARTÍN – TORREJÓN DE VELASCO",
+  bloque:"MEDICION MENSUAL PROGRAMADA / REALIZADA EN MANTENIMIENTO PREVENTIVO",
+  colSubsistema:"ACTIVIDADES MTO PREVENTIVO", colAnual:"AVANCE MTO ANUAL", colAcum:"GRADO CUMPLIMIENTO MTO ANUAL",
+  primeraColumnaMes:5, filaTotal:42,          // E..P (macro: Enero=5 … Diciembre=16)
+  asuntoSufijo:"CHATO (TELECO)",
+  para:["GIMENEZ ALVAREZ Vicente <vicente.gimenezalvarez@urbanandmainlines.com>",
+        "BENITO MARTIN Hector <hector.benitomartin@urbanandmainlines.com>"],
+  copia:["Manuel Tirado Dominguez <mtirado@adif.es>",
+         "Ureña Marcos, Raúl <raul.urena@ineco.com>",
+         "Samuel García Chaparro <sgarciac@adif.es>",
+         "Barrera Piqueres, Carlos <carlos.barrera@ineco.com>",
+         "de la Paz Notario, Iván <ivan.delapaz@ineco.com>"],
+  filas:[
+    {fila:8,  label:"TELECOMUNICACIONES FIJAS",             correo:true,  prog:[0,0,0,273,241,207,0,149,157,398,323,239]},
+    {fila:11, label:"VIDEOVIGILANCIA Y CONTROL DE ACCESOS", correo:true,  prog:[0,76,0,202,238,0,0,933,857,1077,76,0]},
+    {fila:14, label:"TELEMANDO DE ENERGÍA", labelCorreo:"TELEMANDO DE ENERGIA", correo:true, prog:[0,409,330,0,0,0,0,80,0,0,0,0]},
+    {fila:17, label:"", correo:false, prog:[null,null,null,null,null,null,null,null,null,null,null,null]},
+    {fila:20, label:"", correo:false, prog:[null,null,null,null,null,null,null,null,null,null,null,null]},
+    {fila:23, label:"", correo:false, prog:[null,null,null,null,null,null,null,null,null,null,null,null]},
+    {fila:26, label:"", correo:false, prog:[null,null,null,null,null,null,null,null,null,null,null,null]},
+    {fila:29, label:"", correo:false, prog:[null,null,null,null,null,null,null,null,null,null,null,null]},
+    {fila:32, label:"", correo:false, prog:[null,null,null,null,null,null,null,null,null,null,null,null]},
+    {fila:35, label:"", correo:false, prog:[null,null,null,null,null,null,null,null,null,null,null,null]},
+    {fila:38, label:"", correo:false, prog:[null,null,null,null,null,null,null,null,null,null,null,null]}
+  ],
+  firmas:[
+    {t:"Propone: UTE MTO CHATO", c:"Jefe de Mantenimiento"},
+    {t:"Revisa: INECO", c:"Técnico Teleco"},
+    {t:"Aprueba: ADIF", c:"Responsable de Mantenimiento"},
+    {t:"Conforme: ADIF", c:"Jefe de Área Mtto AV Este"}
+  ]
+}
+];
+
+/* Correo a la Subdirección de Operaciones AV (macro CorreoSOAV) */
+const SOAV = {
+  para:["mdelpilar.blanco@ineco.com"],
+  copia:["raul.urena@ineco.com","sgarciac@adif.es","carlos.barrera@ineco.com","ivan.delapaz@ineco.com"],
+  saludo:"Buenos días Pilar."
+};
+
+/* ============================================================================
+   2. ESTADO Y PERSISTENCIA
+   ========================================================================== */
+const LS_KEY = "preventivos.correos.v1";
+const vacia = () => Array(12).fill(null);
+
+const estado = {
+  mes: new Date().getMonth(),          // 0-11 (equivale a la celda B4)
+  ano: new Date().getFullYear(),       // (equivale a la celda C4)
+  hoja: "CORREOS",
+  soavMes: null,                       // índice absoluto mes*12; null = mes anterior automático
+  verVacias: false,
+  datos: {}                            // { CONTRATO: { prog:{fila:[12]}, real:{fila:[12]}, obs:"" } }
+};
+
+function datosPorDefecto(){
+  const d = {};
+  for(const c of CONTRATOS){
+    d[c.id] = {prog:{}, real:{}, obs:""};
+    for(const f of c.filas){
+      d[c.id].prog[f.fila] = f.prog.slice();
+      d[c.id].real[f.fila] = vacia();
+    }
+  }
+  return d;
+}
+
+function cargar(){
+  estado.datos = datosPorDefecto();
+  let raw = null;
+  try{ raw = localStorage.getItem(LS_KEY); }catch(e){ raw = null; }
+  if(!raw) return;
+  try{
+    const s = JSON.parse(raw);
+    if(typeof s.mes === "number") estado.mes = s.mes;
+    if(typeof s.ano === "number") estado.ano = s.ano;
+    if(typeof s.verVacias === "boolean") estado.verVacias = s.verVacias;
+    if(s.datos) fusionar(s.datos);
+  }catch(e){ /* datos corruptos: se ignoran y se usan los del libro */ }
+}
+
+function fusionar(guardado){
+  for(const c of CONTRATOS){
+    const g = guardado[c.id]; if(!g) continue;
+    if(typeof g.obs === "string") estado.datos[c.id].obs = g.obs;
+    for(const clave of ["prog","real"]){
+      if(!g[clave]) continue;
+      for(const f of c.filas){
+        const v = g[clave][f.fila];
+        if(Array.isArray(v) && v.length === 12) estado.datos[c.id][clave][f.fila] = v.map(normNum);
+      }
+    }
+  }
+}
+
+function guardar(){
+  try{
+    localStorage.setItem(LS_KEY, JSON.stringify({
+      mes:estado.mes, ano:estado.ano, verVacias:estado.verVacias, datos:estado.datos
+    }));
+  }catch(e){ /* modo privado o almacenamiento bloqueado: la app sigue funcionando en memoria */ }
+}
+
+function normNum(v){
+  if(v === null || v === undefined || v === "") return null;
+  const n = Number(v);
+  return Number.isFinite(n) ? n : null;
+}
+
+/* ============================================================================
+   3. CÁLCULOS DE HOJA
+   ========================================================================== */
+const contrato = id => CONTRATOS.find(c => c.id === id);
+const num = v => (v === null || v === undefined) ? 0 : Number(v);
+
+/** Valor de una celda (fila de subsistema, mes 0-11) para "prog" o "real". */
+function celda(id, fila, mes, clave){
+  return estado.datos[id][clave][fila][mes];
+}
+
+/** Fila TOTAL: suma de todos los subsistemas para ese mes (fila 30 / 42 del Excel). */
+function total(id, mes, clave){
+  return contrato(id).filas.reduce((a,f) => a + num(celda(id, f.fila, mes, clave)), 0);
+}
+
+/** OBJETIVO ANUAL / AVANCE MTO ANUAL = suma de los 12 meses. */
+function anual(id, fila, clave){
+  let s = 0; for(let m=0;m<12;m++) s += num(celda(id, fila, m, clave)); return s;
+}
+function anualTotal(id, clave){
+  let s = 0; for(let m=0;m<12;m++) s += total(id, m, clave); return s;
+}
+
+/** CONSECUCION ACUMULADA = suma de enero hasta el mes seleccionado (inclusive). */
+function acumulado(id, fila, clave, hastaMes){
+  let s = 0; for(let m=0;m<=hastaMes;m++) s += num(celda(id, fila, m, clave)); return s;
+}
+function acumuladoTotal(id, clave, hastaMes){
+  let s = 0; for(let m=0;m<=hastaMes;m++) s += total(id, m, clave); return s;
+}
+
+/** % grado de cumplimiento = Realizadas / Programadas.
+ *  Devuelve null (se pinta "-") si no hay programadas o no se ha registrado
+ *  ninguna realizada, igual que las celdas "-" del libro. */
+function pct(realizadas, programadas){
+  if(!programadas || realizadas === null) return null;
+  return realizadas / programadas;
+}
+
+/** Suma de Realizadas en un rango de meses; null si no hay ningún dato. */
+function realizadasRango(id, fila, desde, hasta){
+  let s = null;
+  for(let m=desde; m<=hasta; m++){
+    const v = fila === null ? totalReal(id, m) : celda(id, fila, m, "real");
+    if(v !== null) s = (s || 0) + Number(v);
+  }
+  return s;
+}
+
+/** Fila TOTAL de Realizadas en un mes; null si ningún subsistema tiene dato. */
+function totalReal(id, mes){
+  let s = null;
+  for(const f of contrato(id).filas){
+    const v = celda(id, f.fila, mes, "real");
+    if(v !== null) s = (s || 0) + Number(v);
+  }
+  return s;
+}
+function fmtPct(p){
+  if(p === null) return "-";
+  return (p*100).toFixed(0) + "%";
+}
+
+/* Letra de columna de Excel, sólo informativa en las cabeceras */
+function colLetra(n){
+  let s = "";
+  while(n > 0){ const r = (n-1)%26; s = String.fromCharCode(65+r) + s; n = Math.floor((n-1)/26); }
+  return s;
+}
+
+/* ============================================================================
+   4. CONSTRUCCIÓN DEL CUERPO DEL CORREO
+   Reproduce literalmente el HTML que generan las macros CorreoMAVENTS,
+   CorreoSALAVE, CorreoTELICE y CorreoCHATO (mismas etiquetas, mismos estilos
+   en línea, mismo orden de filas y misma fila TOTAL).
+   ========================================================================== */
+const P = "font-family: Calibri; font-size: 11pt; color: #002060;";
+
+function cuerpoContrato(id, mesIdx, ano){
+  const c = contrato(id);
+  const MES = MESES[mesIdx].toUpperCase();          // UCase(Range("B4"))
+  const filas = c.filas.filter(f => f.correo);
+
+  let tabla = "";
+  for(const f of filas){
+    const etiqueta = f.labelCorreo || f.label;
+    const valor = celda(id, f.fila, mesIdx, "prog");
+    tabla += "<tr><td style='text-align: left;'>" + etiqueta + "</td>" +
+             "<td style='text-align: center;'>" + (valor === null ? "" : valor) + "</td>" +
+             "<td style='text-align: center;'></td></tr>";
+  }
+  const tot = total(id, mesIdx, "prog");
+
+  return "<p style='" + P + "'>Buenos días.</p>" +
+    "<p style='" + P + "'>Por favor, cuando tengáis los datos, completad la siguiente tabla con los <b>preventivos realizados</b> en <b>" + MES + "</b> de <b>" + ano + "</b>.</p>" +
+    "<table border='1' style='border-collapse: collapse; table-layout: fixed; font-family: Calibri; font-size: 11pt; color: #002060;'>" +
+    "<tr><th rowspan='2' style='text-align: center; width: 50%; background-color: #0070C0; color: #FFFFFF;'>SUBSISTEMA</th>" +
+    "<th colspan='2' style='text-align: center; background-color: #0070C0; color: #FFFFFF;'>PREVENTIVOS " + MES + " " + ano + "</th></tr>" +
+    "<tr><td style='text-align: center; width: 25%; background-color: #0070C0; color: #FFFFFF;'>PREVISTO</td>" +
+    "<td style='text-align: center; width: 25%; background-color: #0070C0; color: #FFFFFF;'>REALIZADO</td></tr>" +
+    tabla +
+    "<tr style='background-color: #B4C6E7;'><td style='text-align: left; font-weight: bold;'>TOTAL</td>" +
+    "<td style='text-align: center; font-weight: bold;'>" + tot + "</td>" +
+    "<td style='text-align: center;'></td></tr>" +
+    "</table>" +
+    "<p style='" + P + "'>Si tenéis cualquier comentario, lo añadimos al campo observaciones.</p>" +
+    "<p style='" + P + "'><b>OBSERVACIONES:</b></p>" +
+    "<p style='" + P + "'>Muchas gracias</p>";
+}
+
+/** Correo de solicitud de un contrato (equivalente a Correo<CONTRATO>). */
+function correoContrato(id, mesIdx, ano){
+  const c = contrato(id);
+  return {
+    clave: id,
+    titulo: "Preventivos " + c.id,
+    para: c.para,
+    copia: c.copia,
+    asunto: "Preventivos " + MESES[mesIdx].toUpperCase() + " " + ano + " - " + c.asuntoSufijo,
+    cuerpo: cuerpoContrato(id, mesIdx, ano),
+    nombreArchivo: "Preventivos_" + MESES[mesIdx].toUpperCase() + "_" + ano + "_" + c.id
+  };
+}
+
+/** Correo a SOAV (macro CorreoSOAV): por defecto usa el mes anterior al actual. */
+function correoSOAV(mesIdx, ano){
+  const mesAno = MESES[mesIdx].toUpperCase() + " " + ano;
+  const cuerpo =
+    "<html><body><font face='Calibri' size='11pt' color='#002060'>" +
+    SOAV.saludo + "<br><br>" +
+    "Ya están subidos a <a href='" + URL_SOAV_ONEDRIVE + "'>One Drive</a> los Excel de <b>" + mesAno +
+    "</b> de los cuatro contratos de <b>TELECO ESTE</b>.<br><br>" +
+    "Un saludo.<br><br><br><br></font></body></html>";
+  return {
+    clave: "SOAV",
+    titulo: "Informe a SOAV",
+    para: SOAV.para,
+    copia: SOAV.copia,
+    asunto: "Hojas Excel Seguimiento Mantenimiento TELECO ESTE " + mesAno + " - One Drive",
+    cuerpo: cuerpo,
+    nombreArchivo: "SOAV_" + MESES[mesIdx].toUpperCase() + "_" + ano
+  };
+}
+
+/* Mes anterior al de hoy, como hace CorreoSOAV con DateAdd("m", -1, Date) */
+function mesAnterior(){
+  const d = new Date(); d.setDate(1); d.setMonth(d.getMonth() - 1);
+  return {mes:d.getMonth(), ano:d.getFullYear()};
+}
+
+/* ============================================================================
+   5. SALIDA DEL CORREO
+   La macro hacía MailItem.Display (abrir borrador en Outlook con la firma).
+   Aquí se ofrecen tres vías equivalentes:
+     · Descargar .eml  -> se abre en Outlook como borrador listo para enviar
+                          (cabecera X-Unsent: 1), la firma la añade Outlook.
+     · Copiar cuerpo   -> copia con formato para pegar en un correo nuevo.
+     · Abrir en cliente-> mailto: con destinatarios y asunto (cuerpo en texto).
+   ========================================================================== */
+
+/** Codifica una cabecera RFC 2047 sólo si contiene caracteres no ASCII. */
+function cabecera(valor){
+  if(/^[\x00-\x7F]*$/.test(valor)) return valor;
+  const bytes = new TextEncoder().encode(valor);
+  let bin = ""; bytes.forEach(b => bin += String.fromCharCode(b));
+  return "=?UTF-8?B?" + btoa(bin) + "?=";
+}
+
+/** Codifica cada dirección "Nombre <correo>" respetando el nombre para mostrar. */
+function cabeceraDirecciones(lista){
+  return lista.map(d => {
+    const m = d.match(/^\s*(.*?)\s*<([^>]+)>\s*$/);
+    if(!m) return d.trim();
+    return cabecera(m[1]) + " <" + m[2].trim() + ">";
+  }).join(", ");
+}
+
+const soloEmail = d => {
+  const m = d.match(/<([^>]+)>/);
+  return (m ? m[1] : d).trim();
+};
+
+function b64utf8(txt){
+  const bytes = new TextEncoder().encode(txt);
+  let bin = ""; bytes.forEach(b => bin += String.fromCharCode(b));
+  return btoa(bin).replace(/(.{76})/g, "$1\r\n");
+}
+
+/** Construye un .eml (RFC 822) que Outlook abre como borrador sin enviar. */
+function construirEml(correo){
+  const html = "<html><head><meta charset=\"utf-8\"></head><body>" + correo.cuerpo + "</body></html>";
+  return [
+    "X-Unsent: 1",
+    "MIME-Version: 1.0",
+    "To: " + cabeceraDirecciones(correo.para),
+    "Cc: " + cabeceraDirecciones(correo.copia),
+    "Subject: " + cabecera(correo.asunto),
+    "Content-Type: text/html; charset=UTF-8",
+    "Content-Transfer-Encoding: base64",
+    "",
+    b64utf8(html)
+  ].join("\r\n");
+}
+
+function descargarEml(correo){
+  const blob = new Blob([construirEml(correo)], {type:"message/rfc822"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = correo.nombreArchivo.replace(/[^\w\-.]+/g,"_") + ".eml";
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 4000);
+  aviso("Borrador .eml descargado · ábrelo con Outlook");
+}
+
+/** Versión en texto plano del cuerpo, para mailto: y para el portapapeles. */
+function aTexto(html){
+  const doc = document.createElement("div");
+  doc.innerHTML = html.replace(/<\/(p|tr|table)>/gi, "\n").replace(/<\/t[dh]>/gi, "\t");
+  return doc.textContent.replace(/\n{3,}/g, "\n\n").replace(/[ \t]+\n/g, "\n").trim();
+}
+
+function abrirMailto(correo){
+  const url = "mailto:" + encodeURIComponent(correo.para.map(soloEmail).join(";")) +
+    "?cc=" + encodeURIComponent(correo.copia.map(soloEmail).join(";")) +
+    "&subject=" + encodeURIComponent(correo.asunto) +
+    "&body=" + encodeURIComponent(aTexto(correo.cuerpo));
+  window.location.href = url;
+}
+
+async function copiarHtml(correo){
+  const html = correo.cuerpo;
+  const texto = aTexto(html);
+  try{
+    if(navigator.clipboard && window.ClipboardItem){
+      await navigator.clipboard.write([new ClipboardItem({
+        "text/html": new Blob([html], {type:"text/html"}),
+        "text/plain": new Blob([texto], {type:"text/plain"})
+      })]);
+      aviso("Cuerpo copiado con formato · pégalo en el correo");
+      return;
+    }
+  }catch(e){ /* se prueba el método alternativo */ }
+  // Alternativa para navegadores sin ClipboardItem o sin permiso de escritura
+  const tmp = document.createElement("div");
+  tmp.contentEditable = "true";
+  tmp.style.cssText = "position:fixed;left:-9999px;top:0;white-space:normal";
+  tmp.innerHTML = html;
+  document.body.appendChild(tmp);
+  const rango = document.createRange(); rango.selectNodeContents(tmp);
+  const sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(rango);
+  let ok = false;
+  try{ ok = document.execCommand("copy"); }catch(e){ ok = false; }
+  sel.removeAllRanges(); tmp.remove();
+  aviso(ok ? "Cuerpo copiado con formato · pégalo en el correo"
+           : "No se pudo copiar: selecciona el texto de la vista previa y cópialo a mano");
+}
+
+async function copiarTexto(txt, msg){
+  try{ await navigator.clipboard.writeText(txt); aviso(msg); }
+  catch(e){
+    const ta = document.createElement("textarea");
+    ta.value = txt; ta.style.cssText = "position:fixed;left:-9999px";
+    document.body.appendChild(ta); ta.select();
+    try{ document.execCommand("copy"); aviso(msg); }catch(_){ aviso("No se pudo copiar"); }
+    ta.remove();
+  }
+}
+
+/* ============================================================================
+   6. INTERFAZ · utilidades
+   ========================================================================== */
+const $  = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+
+function el(tag, props, ...hijos){
+  const n = document.createElement(tag);
+  if(props) for(const [k,v] of Object.entries(props)){
+    if(k === "class") n.className = v;
+    else if(k === "html") n.innerHTML = v;
+    else if(k.startsWith("on")) n.addEventListener(k.slice(2), v);
+    else if(v !== null && v !== undefined) n.setAttribute(k, v);
+  }
+  for(const h of hijos.flat()){
+    if(h === null || h === undefined || h === false) continue;
+    n.appendChild(typeof h === "string" ? document.createTextNode(h) : h);
+  }
+  return n;
+}
+
+let temporizadorAviso = null;
+function aviso(txt){
+  let t = $(".toast");
+  if(!t){ t = el("div", {class:"toast"}); document.body.appendChild(t); }
+  t.textContent = txt;
+  clearTimeout(temporizadorAviso);
+  temporizadorAviso = setTimeout(() => t.remove(), 3200);
+}
+
+/* ============================================================================
+   7. INTERFAZ · hoja CORREOS
+   ========================================================================== */
+function pintarTabs(){
+  const tabs = $("#tabs");
+  tabs.innerHTML = "";
+  const hojas = ["CORREOS", ...CONTRATOS.map(c => c.id)];
+  for(const h of hojas){
+    tabs.appendChild(el("button", {
+      class:"tab", role:"tab", "aria-selected": String(estado.hoja === h),
+      onclick: () => { estado.hoja = h; pintarTabs(); mostrarVista(); }
+    }, h));
+  }
+}
+
+function mostrarVista(){
+  $("#view-CORREOS").hidden = estado.hoja !== "CORREOS";
+  for(const c of CONTRATOS){
+    const v = $("#view-" + c.id);
+    if(v) v.hidden = estado.hoja !== c.id;
+  }
+  if(estado.hoja !== "CORREOS") pintarHoja(estado.hoja);
+  window.scrollTo({top:0, behavior:"instant"});
+}
+
+function pintarTarjetas(){
+  const cont = $("#cards");
+  cont.innerHTML = "";
+  for(const c of [...CONTRATOS].sort((a,b) => a.orden - b.orden)){
+    const previsto = total(c.id, estado.mes, "prog");
+    const realizado = total(c.id, estado.mes, "real");
+    cont.appendChild(el("div", {class:"card"},
+      el("div", {class:"logo"},
+        c.logo ? el("img", {src:c.logo, alt:"Logotipo " + c.rotulo})
+               : el("div", {class:"txtlogo"}, c.rotulo)),
+      el("h3", null, c.id),
+      el("div", {class:"meta", html:
+        "<b>Nº expediente:</b> " + c.expediente + "<br>Mantenedor: " + c.mantenedor}),
+      el("div", {class:"prev"},
+        el("span", null, "Previsto " + MESES[estado.mes]),
+        el("strong", null, String(previsto))),
+      realizado ? el("div", {class:"prev"},
+        el("span", null, "Realizado registrado"),
+        el("strong", null, String(realizado))) : null,
+      el("div", {class:"actions"},
+        el("button", {class:"btn-mail", onclick:() => abrirCola([correoContrato(c.id, estado.mes, estado.ano)])},
+          el("span", {class:"env"}, "✉"), "E-mail"),
+        el("button", {class:"btn-ghost", title:"Ver la hoja " + c.hoja,
+          onclick:() => { estado.hoja = c.id; pintarTabs(); mostrarVista(); }}, "Hoja"))
+    ));
+  }
+}
+
+function pintarEnlaces(){
+  $("#lnkOneDrive").href = URL_ADIF_ESTE;
+
+  const sel = $("#soavMes");
+  if(!sel.options.length){
+    const auto = mesAnterior();
+    sel.appendChild(el("option", {value:"auto"},
+      "Mes anterior automático (" + MESES[auto.mes] + " " + auto.ano + ")"));
+    MESES.forEach((m,i) => sel.appendChild(el("option", {value:String(i)}, m)));
+  }
+
+  $("#notas").innerHTML =
+    "<b>Notas de la conversión:</b> " +
+    "Los valores <i>PREVISTO</i> y la fila <i>TOTAL</i> del correo salen de las filas " +
+    "<i>Programadas</i> de cada hoja, igual que en las macros. " +
+    "<i>OBJETIVO ANUAL</i> se calcula como suma de los 12 meses y " +
+    "<i>CONSECUCIÓN ACUMULADA</i> como suma de enero hasta el mes seleccionado " +
+    "(en el libro eran valores fijos ya desfasados). " +
+    "En TELICE se respeta el orden de la hoja (PLO, RACA, RACO): la macro original " +
+    "etiquetaba esas dos últimas filas al revés.";
+}
+
+/* ============================================================================
+   8. INTERFAZ · hojas de contrato
+   ========================================================================== */
+function crearVistasHojas(){
+  const cont = $("#sheetViews");
+  cont.innerHTML = "";
+  for(const c of CONTRATOS){
+    cont.appendChild(el("section", {class:"view", id:"view-" + c.id, role:"tabpanel", hidden:"hidden"}));
+  }
+}
+
+function pintarHoja(id){
+  const c = contrato(id);
+  const v = $("#view-" + id);
+  v.innerHTML = "";
+
+  v.appendChild(el("div", {class:"sheet-head"},
+    el("p", {class:"contrato"}, c.contrato),
+    el("div", {class:"strip"},
+      el("div", null, el("b", null, "Nº expediente"), el("span", null, c.expediente)),
+      el("div", null, el("b", null, "Eje"), el("span", null, c.eje)),
+      el("div", null, el("b", null, "Mantenedor"), el("span", null, c.mantenedor)),
+      el("div", null, el("b", null, "Certificación trabajos del mes de"),
+        el("span", null, MESES[estado.mes] + " " + estado.ano)))
+  ));
+
+  v.appendChild(el("div", {class:"sheet-title"}, c.bloque));
+  const wrap = el("div", {class:"tablewrap"}, tablaHoja(c));
+  v.appendChild(wrap);
+  // Desplazar la tabla hasta la columna del mes seleccionado, cuadrando el
+  // desplazamiento con el inicio de una columna para que no asome media
+  // columna por debajo de las dos primeras, que quedan fijas.
+  requestAnimationFrame(() => ajustarScroll(wrap));
+
+  v.appendChild(el("div", {class:"sheet-tools"},
+    el("label", {style:"display:flex;gap:6px;align-items:center;font-size:13px;font-weight:700;color:var(--muted)"},
+      el("input", {type:"checkbox", ...(estado.verVacias ? {checked:"checked"} : {}),
+        onchange:(e) => { estado.verVacias = e.target.checked; guardar(); pintarHoja(id); }}),
+      "Mostrar filas sin subsistema"),
+    el("span", {class:"spacer"}),
+    el("button", {class:"btn-ghost", onclick:() => { copiarRealizadasDesdeCorreo(id); }},
+      "Rellenar Realizadas = Programadas"),
+    el("button", {class:"btn-mail", style:"flex:0 0 auto",
+      onclick:() => abrirCola([correoContrato(id, estado.mes, estado.ano)])},
+      el("span", {class:"env"}, "✉"), "E-mail " + id)
+  ));
+
+  const obs = el("textarea", {placeholder:"Observaciones de la certificación…"});
+  obs.value = estado.datos[id].obs || "";
+  obs.addEventListener("input", () => { estado.datos[id].obs = obs.value; guardar(); });
+  v.appendChild(el("div", {class:"obs"}, el("label", null, "Observaciones:"), obs));
+
+  v.appendChild(el("div", {class:"firmas"},
+    c.firmas.map(f => el("div", {class:"firma"}, el("b", null, f.t), f.c))));
+}
+
+/** Ancho de las dos columnas fijas (SUBSISTEMA + Actuaciones).
+ *  Se suman los anchos: en las celdas "sticky" offsetLeft ya lleva incorporado
+ *  el desplazamiento y no sirve para medir. */
+function anchoFijo(wrap){
+  const a = wrap.querySelector("thead th.subsis");
+  const b = wrap.querySelector("thead th.actcol");
+  return (a ? a.offsetWidth : 232) + (b ? b.offsetWidth : 168);
+}
+
+function ajustarScroll(wrap){
+  const sel = wrap.querySelector("thead th.selmes");
+  if(!sel || wrap.scrollWidth <= wrap.clientWidth) return;
+  const fijo = anchoFijo(wrap);
+  const minimo = sel.offsetLeft + sel.offsetWidth - wrap.clientWidth + 8;
+  const columnas = Array.from(wrap.querySelectorAll("thead th")).slice(2);
+  const destino = columnas.find(c => (c.offsetLeft - fijo) >= minimo);
+  wrap.scrollLeft = Math.max(0, destino ? destino.offsetLeft - fijo : minimo);
+}
+
+function tablaHoja(c){
+  const id = c.id;
+  const filasVisibles = c.filas.filter(f => estado.verVacias || f.label);
+
+  const thead = el("thead", null,
+    el("tr", null,
+      el("th", {class:"subsis"}, c.colSubsistema),
+      el("th", {class:"actcol"}, "Actuaciones"),
+      el("th", null, c.colAnual),
+      el("th", null, c.colAcum),
+      MESES.map((m,i) => el("th", {
+        class:"mescol" + (i === estado.mes ? " selmes" : ""),
+        title:"Columna " + colLetra(c.primeraColumnaMes + i) + " del Excel"
+      }, m))
+    ));
+
+  const tbody = el("tbody");
+
+  for(const f of filasVisibles){
+    tbody.appendChild(filaActuacion(c, f, "prog", "Programadas", "r-prog", true));
+    tbody.appendChild(filaActuacion(c, f, "real", "Realizadas",  "r-real", true));
+    tbody.appendChild(filaPorcentaje(c, f));
+  }
+
+  // Fila TOTAL (fila 30 en MAVENTS/SALAVE/TELICE, fila 42 en CHATO)
+  tbody.appendChild(filaTotal(c, "prog", "Programadas"));
+  tbody.appendChild(filaTotal(c, "real", "Realizadas"));
+  tbody.appendChild(filaTotalPorcentaje(c));
+
+  return el("table", {class:"sheet"}, thead, tbody);
+}
+
+function filaActuacion(c, f, clave, etiqueta, cls, editable){
+  const id = c.id;
+  const primera = clave === "prog";
+  const celdas = MESES.map((m,i) => {
+    const inp = el("input", {
+      type:"number", step:"1", inputmode:"numeric",
+      "aria-label": (f.label || "fila " + f.fila) + " · " + etiqueta + " · " + m
+    });
+    const val = celda(id, f.fila, i, clave);
+    inp.value = val === null ? "" : val;
+    inp.addEventListener("change", () => {
+      estado.datos[id][clave][f.fila][i] = normNum(inp.value);
+      guardar(); pintarHoja(id); pintarTarjetas();
+    });
+    return el("td", {class: i === estado.mes ? "selmes" : null}, inp);
+  });
+
+  return el("tr", {class:cls},
+    primera ? el("td", {class:"subsis", rowspan:"3"}, f.label || "—") : null,
+    el("td", {class:"act"}, etiqueta),
+    el("td", null, String(anual(c.id, f.fila, clave))),
+    el("td", null, String(acumulado(c.id, f.fila, clave, estado.mes))),
+    celdas);
+}
+
+function filaPorcentaje(c, f){
+  const pAnual = pct(realizadasRango(c.id, f.fila, 0, 11), anual(c.id, f.fila, "prog"));
+  const pAcum  = pct(realizadasRango(c.id, f.fila, 0, estado.mes), acumulado(c.id, f.fila, "prog", estado.mes));
+  return el("tr", {class:"r-pct"},
+    el("td", {class:"act"}, "% grado de cumplimiento"),
+    el("td", null, celPct(pAnual)),
+    el("td", null, celPct(pAcum)),
+    MESES.map((m,i) => el("td", {class: i === estado.mes ? "selmes" : null},
+      celPct(pct(celda(c.id, f.fila, i, "real"), num(celda(c.id, f.fila, i, "prog")))))));
+}
+
+function filaTotal(c, clave, etiqueta){
+  return el("tr", {class:"grupo-total"},
+    clave === "prog" ? el("td", {class:"subsis", rowspan:"3"}, "TOTAL") : null,
+    el("td", {class:"act"}, etiqueta),
+    el("td", null, String(anualTotal(c.id, clave))),
+    el("td", null, String(acumuladoTotal(c.id, clave, estado.mes))),
+    MESES.map((m,i) => el("td", {class: i === estado.mes ? "selmes" : null},
+      String(total(c.id, i, clave)))));
+}
+
+function filaTotalPorcentaje(c){
+  return el("tr", {class:"grupo-total"},
+    el("td", {class:"act"}, "% grado de cumplimiento"),
+    el("td", null, celPct(pct(realizadasRango(c.id, null, 0, 11), anualTotal(c.id,"prog")))),
+    el("td", null, celPct(pct(realizadasRango(c.id, null, 0, estado.mes), acumuladoTotal(c.id,"prog",estado.mes)))),
+    MESES.map((m,i) => el("td", {class: i === estado.mes ? "selmes" : null},
+      celPct(pct(totalReal(c.id,i), total(c.id,i,"prog"))))));
+}
+
+function celPct(p){
+  if(p === null) return el("span", null, "-");
+  return el("span", {class: p >= 1 ? "pct-ok" : "pct-bad"}, fmtPct(p));
+}
+
+/** Atajo para cerrar el ciclo: dar por realizadas todas las programadas del mes. */
+function copiarRealizadasDesdeCorreo(id){
+  const c = contrato(id);
+  for(const f of c.filas){
+    estado.datos[id].real[f.fila][estado.mes] = estado.datos[id].prog[f.fila][estado.mes];
+  }
+  guardar(); pintarHoja(id); pintarTarjetas();
+  aviso("Realizadas de " + MESES[estado.mes] + " igualadas a las programadas");
+}
+
+/* ============================================================================
+   9. MODAL DE CORREO Y COLA
+   CorreoLAVESTE encadenaba CHATO → SALAVE → TELICE → MAVENTS; aquí la cola
+   presenta los mismos cuatro correos uno detrás de otro.
+   ========================================================================== */
+let cola = [];
+let colaIdx = 0;
+
+function abrirCola(correos){
+  cola = correos; colaIdx = 0;
+  pintarModal();
+}
+
+function cerrarModal(){
+  const m = $(".modal-back");
+  if(m) m.remove();
+  cola = []; colaIdx = 0;
+  document.removeEventListener("keydown", teclaModal);
+}
+
+function teclaModal(e){ if(e.key === "Escape") cerrarModal(); }
+
+function pintarModal(){
+  const previo = $(".modal-back");
+  if(previo) previo.remove();
+  const correo = cola[colaIdx];
+  if(!correo) return;
+
+  const cuerpoHtml = el("div", {class:"mailprev", html: correo.cuerpo});
+  cuerpoHtml.appendChild(el("div", {class:"sigslot"},
+    "▸ Aquí Outlook añadirá tu firma predeterminada, igual que hacía la macro " +
+    "(MailItem.Display + HTMLBody)."));
+
+  const back = el("div", {class:"modal-back", onclick:(e) => { if(e.target === back) cerrarModal(); }},
+    el("div", {class:"modal", role:"dialog", "aria-modal":"true"},
+      el("header", null,
+        el("h2", null, correo.titulo),
+        cola.length > 1 ? el("div", {class:"queue"},
+          el("span", {class:"pill"}, (colaIdx+1) + " / " + cola.length)) : null,
+        el("button", {class:"close", title:"Cerrar", onclick:cerrarModal}, "×")),
+      el("div", {class:"body"},
+        el("div", {class:"hdrs"},
+          el("div", {class:"k"}, "Para"),   el("div", {class:"v"}, correo.para.join("; ")),
+          el("div", {class:"k"}, "CC"),     el("div", {class:"v"}, correo.copia.join("; ")),
+          el("div", {class:"k"}, "Asunto"), el("div", {class:"v subject"}, correo.asunto)),
+        cuerpoHtml),
+      el("footer", null,
+        el("button", {class:"btn-pri", onclick:() => descargarEml(correo)}, "⤓ Descargar .eml (Outlook)"),
+        el("button", {class:"btn-ghost", onclick:() => copiarHtml(correo)}, "Copiar cuerpo"),
+        el("button", {class:"btn-ghost", onclick:() => copiarTexto(
+          correo.para.map(soloEmail).join("; "), "Destinatarios copiados")}, "Copiar Para"),
+        el("button", {class:"btn-ghost", onclick:() => copiarTexto(
+          correo.copia.map(soloEmail).join("; "), "Copia (CC) copiada")}, "Copiar CC"),
+        el("button", {class:"btn-ghost", onclick:() => abrirMailto(correo)}, "Abrir en cliente"),
+        el("span", {class:"spacer"}),
+        colaIdx > 0 ? el("button", {class:"btn-ghost",
+          onclick:() => { colaIdx--; pintarModal(); }}, "← Anterior") : null,
+        colaIdx < cola.length - 1
+          ? el("button", {class:"btn-pri", onclick:() => { colaIdx++; pintarModal(); }}, "Siguiente →")
+          : el("button", {class:"btn-ghost", onclick:cerrarModal}, "Cerrar"))
+    ));
+
+  document.body.appendChild(back);
+  document.addEventListener("keydown", teclaModal);
+}
+
+/* ============================================================================
+   10. MACROS DE APOYO
+   ========================================================================== */
+
+/** Macro AbrirWebsEnNuevasVentanas: carpeta INECO del mes + carpeta ADIF. */
+function abrirWebs(){
+  const mm  = String(estado.mes + 1).padStart(2, "0");
+  const mmm = MESES_ABR[estado.mes];
+  const yy  = String(estado.ano).slice(-2);
+  const url1 = URL_INECO_BASE + mm + "%20" + mmm + yy + URL_INECO_TAIL;
+  window.open(url1, "_blank", "noopener");
+  window.open(URL_ADIF_ESTE, "_blank", "noopener");
+  aviso("Abriendo carpeta " + mm + " " + mmm + yy + " (INECO) y carpeta ADIF");
+}
+
+/* Exportar / importar / restablecer datos */
+function menuDatos(){
+  const opciones = [
+    ["Exportar datos a JSON", exportarJson],
+    ["Importar datos desde JSON", importarJson],
+    ["Restablecer los valores del Excel original", restablecer]
+  ];
+  const back = el("div", {class:"modal-back", onclick:(e) => { if(e.target === back) back.remove(); }},
+    el("div", {class:"modal", style:"width:min(460px,100%)"},
+      el("header", null, el("h2", null, "Datos"),
+        el("button", {class:"close", onclick:() => back.remove()}, "×")),
+      el("div", {class:"body", style:"display:flex;flex-direction:column;gap:10px"},
+        opciones.map(([txt, fn]) =>
+          el("button", {class:"btn-ghost", style:"text-align:left",
+            onclick:() => { back.remove(); fn(); }}, txt)),
+        el("p", {style:"font-size:12.5px;color:var(--muted);margin:6px 0 0"},
+          "Los cambios se guardan automáticamente en este navegador."))
+    ));
+  document.body.appendChild(back);
+}
+
+function exportarJson(){
+  const blob = new Blob([JSON.stringify({
+    mes:estado.mes, ano:estado.ano, datos:estado.datos
+  }, null, 2)], {type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const a = el("a", {href:url, download:"preventivos_" + estado.ano + ".json"});
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 4000);
+  aviso("Datos exportados");
+}
+
+function importarJson(){
+  const inp = el("input", {type:"file", accept:"application/json,.json"});
+  inp.addEventListener("change", () => {
+    const f = inp.files && inp.files[0];
+    if(!f) return;
+    const lector = new FileReader();
+    lector.onload = () => {
+      try{
+        const s = JSON.parse(String(lector.result));
+        estado.datos = datosPorDefecto();
+        if(typeof s.mes === "number") estado.mes = s.mes;
+        if(typeof s.ano === "number") estado.ano = s.ano;
+        if(s.datos) fusionar(s.datos);
+        guardar(); pintarTodo();
+        aviso("Datos importados");
+      }catch(e){ aviso("El archivo no tiene un formato válido"); }
+    };
+    lector.readAsText(f);
+  });
+  inp.click();
+}
+
+function restablecer(){
+  if(!confirm("Se recuperarán los valores del Excel original y se perderán los cambios guardados. ¿Continuar?")) return;
+  estado.datos = datosPorDefecto();
+  guardar(); pintarTodo();
+  aviso("Valores originales restablecidos");
+}
+
+/* ============================================================================
+   11. ARRANQUE
+   ========================================================================== */
+function pintarTodo(){
+  $("#mes").value = String(estado.mes);
+  $("#ano").value = String(estado.ano);
+  pintarTabs();
+  pintarTarjetas();
+  pintarEnlaces();
+  mostrarVista();
+}
+
+function iniciar(){
+  cargar();
+
+  const selMes = $("#mes");
+  MESES.forEach((m,i) => selMes.appendChild(el("option", {value:String(i)}, m)));
+  selMes.addEventListener("change", () => {
+    estado.mes = Number(selMes.value); guardar(); pintarTarjetas();
+    if(estado.hoja !== "CORREOS") pintarHoja(estado.hoja);
+  });
+
+  const inpAno = $("#ano");
+  inpAno.addEventListener("change", () => {
+    const n = Number(inpAno.value);
+    estado.ano = Number.isFinite(n) && n > 1999 ? n : new Date().getFullYear();
+    inpAno.value = String(estado.ano);
+    guardar();
+    if(estado.hoja !== "CORREOS") pintarHoja(estado.hoja);
+  });
+
+  crearVistasHojas();
+
+  $("#btnTodos").addEventListener("click", () => {
+    // Mismo orden que la macro CorreoLAVESTE
+    const orden = ["CHATO","SALAVE","TELICE","MAVENTS"];
+    abrirCola(orden.map(id => correoContrato(id, estado.mes, estado.ano)));
+  });
+
+  $("#btnSOAV").addEventListener("click", () => {
+    const v = $("#soavMes").value;
+    let mes, ano;
+    if(v === "auto"){ const a = mesAnterior(); mes = a.mes; ano = a.ano; }
+    else { mes = Number(v); ano = estado.ano; }
+    abrirCola([correoSOAV(mes, ano)]);
+  });
+
+  $("#btnAbrirWebs").addEventListener("click", abrirWebs);
+  $("#btnDatos").addEventListener("click", menuDatos);
+
+  pintarTodo();
+}
+
+iniciar();
+</script>
+</body>
+</html>
