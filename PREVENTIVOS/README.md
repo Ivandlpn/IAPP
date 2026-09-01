@@ -41,18 +41,31 @@ en línea.
 ### La firma
 
 Outlook inserta su firma automática detrás del primer bloque que encuentra, y con
-párrafos sueltos la colaba entre el saludo y la tabla. El cuerpo del `.eml` va ahora
-dentro de una única celda de tabla: al haber un solo bloque, la firma cae detrás del
-mensaje completo.
+párrafos sueltos la colaba entre el saludo y la tabla. Dos medidas: el cuerpo del
+`.eml` va dentro de una única celda de tabla —al haber un solo bloque, nada puede
+colarse en medio— y **la firma la pone la propia aplicación**, siempre al final.
 
-Además, en **Datos → Mi firma** se puede pegar la firma propia una vez (Ctrl+C en
-Outlook, Ctrl+V ahí); se guarda en el navegador y se añade al final de cada `.eml`,
-igual que hacía la macro con `Cuerpo & originalSignature`.
+La firma de serie reproduce la corporativa del remitente con el logotipo oficial de
+Ineco, que ya venía dentro del libro. Se cambia en **Datos → Mi firma**: basta copiarla
+desde un mensaje de Outlook (Ctrl+C) y pegarla ahí (Ctrl+V). Con *Vaciar* se envía sin
+firma y la pone Outlook.
 
-- **Descargar .eml** → incluye tu firma al final. Si Outlook además mete la suya,
-  desactívala para mensajes nuevos en *Archivo → Opciones → Correo → Firmas*.
-- **Copiar cuerpo** → copia sin firma, para pegarlo arriba del todo en un mensaje
-  nuevo que ya lleve la tuya.
+Las imágenes de la firma no viajan como `data:` —Outlook no las pinta— sino como
+partes MIME propias: el `.eml` es un `multipart/related` y cada imagen lleva su
+`Content-ID`, referenciada desde el HTML con `cid:`.
+
+Conviene desactivar la firma automática de Outlook para mensajes nuevos
+(*Archivo → Opciones → Correo → Firmas*) para que no salga duplicada.
+
+### Destinatarios
+
+**Modificar Para** y **Modificar CC** abren la lista de destinatarios de ese correo,
+una dirección por línea. El cambio se guarda en el navegador y sustituye a la lista
+del libro; *Recuperar los del libro* deshace la modificación.
+
+Cada contrato lleva el color de su logotipo en el libro: azul marino en MAVENTS
+(#184878), coral de Albali en SALAVE (#E4786C) y oliva de Telice en TELICE (#484824).
+CHATO no tiene logotipo en el libro, así que usa el azul corporativo (#002060).
 
 ## Exportar a Excel
 
