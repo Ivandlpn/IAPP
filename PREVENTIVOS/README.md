@@ -40,30 +40,9 @@ en línea.
 
 ### La firma
 
-Outlook inserta su firma automática detrás del primer bloque que encuentra, y con
-párrafos sueltos la colaba entre el saludo y la tabla. Dos medidas: el cuerpo del
-`.eml` va dentro de una única celda de tabla —al haber un solo bloque, nada puede
-colarse en medio— y **la firma la pone la propia aplicación**, siempre al final.
-
-La firma de serie reproduce la corporativa del remitente con el logotipo oficial de
-Ineco, que ya venía dentro del libro. Se cambia en **Datos → Mi firma**: basta copiarla
-desde un mensaje de Outlook (Ctrl+C) y pegarla ahí (Ctrl+V). Con *Vaciar* se envía sin
-firma y la pone Outlook.
-
-Las imágenes de la firma no viajan como `data:` —Outlook no las pinta— sino como
-partes MIME propias: el `.eml` es un `multipart/related` y cada imagen lleva su
-`Content-ID`, referenciada desde el HTML con `cid:`.
-
-**Hay que desactivar la firma automática de Outlook**, o saldrán dos. Outlook inserta
-la suya al abrir el borrador y la coloca al principio, antes del saludo; desde el `.eml`
-no hay forma de impedirlo. En *Datos → Mi firma* está el botón «Cómo se hace» con los
-pasos para Outlook de escritorio y para el nuevo Outlook / web.
-
-Ahí mismo se elige quién firma:
-
-- **Firma la aplicación** (de serie) — la firma va al final del `.eml`, siempre en el
-  mismo sitio. Requiere desactivar la de Outlook.
-- **Firma Outlook** — el `.eml` sale sin firma y la pone Outlook, donde él decida.
+El `.eml` sale **sin firma**: la pone Outlook al abrir el borrador, con la que tenga
+configurada para mensajes nuevos. Todo el cuerpo va dentro de una única celda de tabla
+para que no pueda insertarse nada entre el saludo y la tabla de preventivos.
 
 ### Destinatarios
 
